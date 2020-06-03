@@ -1,0 +1,156 @@
+ % Default language option is [thaithesis]. The other possible option is [engthesis].
+% Default format option is [ugrad]. Other possible options are [master,doctor].
+\documentclass[a4paper,thaithesis]{ubu}
+
+% List all required packages here
+% ทุก package รวมไว้ที่เดียว 
+\usepackage{coding}
+
+%%------------------------------------------------------------
+%%-               SETTING THESIS PARAMETERS                  -
+%%------------------------------------------------------------
+
+%%-----------------   ชื่อโครงงาน                 -----------%%
+%% หัวข้อโครงงาน {ไทย} {English}
+\thesistitle                 
+{ระบบสแกนใบหน้าสำหรับเเคชเชียร์} 
+{Recognition for cashier} 
+
+%%-----------------   ผู้พัฒนาโครงงาน              -----------%%
+%% คำนำหน้า {ไทย} {English}
+\authortitle                            
+{นางสาว}                           
+{Miss}                             
+%% ชื่อสกุล {ไทย} {English}
+\thesisauthor                           
+{ภัทราภรณ์ อินทา}                         
+{Pattaraporn Inta}            
+
+              
+
+%%----------------   อาจารย์ที่ปรึกษาโครงงาน        ----------%%
+\advisor   
+{อาจารย์ ดร.ไพชยนต์ คงไชย}       
+{ดร.ไพชยนต์ คงไชย}                 
+{Phaichayon Kongchai , Ph.D.}    
+{PAICHAYON KONGCHAI , Ph.D.}      
+
+%%----------------   อาจารย์ที่ปรึกษาโครงงาน (ถ้ามี)  ----------%%
+%\coadvisor
+%{อาจารย์ ดร.ชื่อร่วม สกุล}               
+%{ดร. ชื่อร่วม สกุล}                          
+%{Cofirstname Lastname, Ph.D.}  
+%{COFIRTNAME LASTNAME, Ph.D.}          
+
+%%----------------   ข้อมูลสถาบัน                  ----------%%
+%% คณะ {ไทย} {English}
+\faculty
+{วิทยาศาสตร์}                          
+{Science}                           
+%% ภาควิชา {ไทย} {English}
+\department                             
+{คณิตศาสตร์ สถิติ และคอมพิวเตอร์}                      
+{Mathematics Statistics and Computer}                  
+
+%%----------------   ข้อมูลหลักสูตรและรายวิชา        ----------%%
+%% ชื่อหลักสูตร
+\fieldofstudy                           
+{วิทยาการคอมพิวเตอร์}                      
+{Computer Science}                  
+%% ชื่อปริญญา
+\degree                                 
+{วิทยาศาสตรบัณฑิต}                   
+{Bachelor of Science}                  
+%% ปีการศึกษาที่ทำโครงงาน
+\academicyear{2562}                     
+%% รหัสประจำตัวนักศึกษา
+\authorid{59110440309}                   
+%% รหัสวิชา
+\subjID{1104494}							
+%% ชื่อวิชา
+\subjName								
+{โครงงานวิทยาศาสตร์}
+{Senior Project}
+
+%%----------------   หัวหน้าภาควิชา            ----------%%
+\deanname                               
+{ผศ.ดร. สุพจน์ สีบุตร}                       
+{ Asst. Prof. Supot Seebut, Ph.D.}     
+
+%%----------------   รายชื่อคณะกรรมการสอบโครงงาน -------%%
+\committee                              
+{
+\CommitteeBlockAdvisor                  
+\CommitteeBlockCoAdvisor                
+\CommitteeBlock{กรรมการ}{ดร. วราวุฒิ ผ้าเจริญ} 
+\CommitteeBlock{กรรมการ}{ดร. ทศพร จูฉิม} } 
+}
+
+%%-------------------------------------------------------------------------------
+%%-                               DOCUMENT                                      -
+%%-------------------------------------------------------------------------------
+\begin{document}
+% หน้าปกภาษาไทย - Thai Cover
+\makethaicover
+\newpage
+
+% หน้าปกภาษาอังกฤษ - English Cover
+%\makeenglishcover
+%\newpage
+
+% หน้ารายชื่อคณะกรรมการสอบ - Committee page
+%\makecommittee
+\ThaiCommittee
+\newpage
+
+% หน้ากิตติกรรมประกาศจากไฟล์ acknowledgement.tex
+\include{acknowledgement}
+\newpage
+
+% หน้าบทคัดย่อภาษาไทยจากไฟล์ abstractthai.tex
+\include{abstractthai}
+\newpage
+
+% หน้าบทคัดย่อภาษาอังกฤษจากไฟล์ abstractenglish.tex
+\include{abstractenglish}
+\newpage
+
+
+% คำสั่งสร้างรายการสารบัญ
+\tableofcontents
+\newpage
+% คำสั่งสร้างรายการตาราง
+\listoftables
+\newpage
+% คำสั่งสร้างรายการภาพอ้างอิง
+\listoffigures
+\newpage
+
+% คำสั่งรวมไฟล์ต่างๆในโครงการ แยกรายบท
+\include{1-introduction} 
+\include{2-background}
+\include{3-design}
+\include{4-implementation}
+\include{5-testing}
+\include{6-conclusion}
+
+
+% คำสั่งรวมแหล่งอ้างอิง
+\ULforem %%%
+\setlength{\bibhang}{1.5cm}
+\bibliographystyle{chulanat} 
+\bibliography{references} % ใช้แหล่งอ้างอิงจากไฟล์ชื่อ references.bib
+\normalem
+
+
+% รายการภาคผนวก - Appendix Section
+%\numappendices{3}        % จำนวนภาคผนวก
+%\startappendix
+%\include{appendix1-setup}
+%\include{appendix2-installation}
+%\include{appendix3-manual}
+
+%% ข้อมูลผู้ดำเนินโครงการจากไฟล์ biography.tex - Biography Section
+\include{biography} 
+
+\end{document}

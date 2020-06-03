@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+ .body {
+   border: green 2px solid;
+
+ }
+</style>
+
+	<title>แนะนำเมนู</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<script type="text/javascript" src="https://www.all2sale.com/randfood/shake.js"></script>
+	<script type="text/javascript">
+		var looper;
+		var looper_stop = 0;
+		var degrees = 0;
+
+		function rand() {
+			var array = new Array(
+				'คาปูชิโน่(ปั่น)',
+				'แบล็คคอฟฟี่(เย็น)',
+				'เอสเปรสโซ่(ร้อน)',
+				'มอคค่า(เย็น)',
+				'ลาเต้(ร้อน)',
+				'ชา(เย็น)',
+				'ชาเขียวนม(ปั่น)',
+				'ชานม(เย็น)',
+				'ชาเย็น(เย็น)',
+				'นมสด(ร้อน)',
+				'ช็อกโกเเลต(เย็น)',
+				'ไวท ช็อก มัคคิอาโต้(ร้อน)',
+				'ดาร์คช็อกโกแลต(ปั่น)',
+				'สตรอเบอร์รี่ชีสเค้ก(ปั่น)'
+				);
+			
+			var elem = document.getElementById('img1');
+			if(navigator.userAgent.match("Chrome")){
+				elem.style.WebkitTransform = "rotate("+degrees+"deg)";
+			} else if(navigator.userAgent.match("Firefox")){
+				elem.style.MozTransform = "rotate("+degrees+"deg)";
+			} else if(navigator.userAgent.match("MSIE")){
+				elem.style.msTransform = "rotate("+degrees+"deg)";
+			} else if(navigator.userAgent.match("Opera")){
+				elem.style.OTransform = "rotate("+degrees+"deg)";
+			} else {
+				elem.style.transform = "rotate("+degrees+"deg)";
+			}
+			if(degrees == 0 && looper_stop == 0){
+				looper = setTimeout('rand()',2);
+			}
+			if(looper_stop == 10){
+				degrees = 0;
+				var show=array[Math.floor(Math.random() * array.length)];
+				document.getElementById('imagef').innerHTML = '<img onclick="this.remove()" style="width: 100%;" src="https://www.all2sale.com/randfood/f.gif">';
+				document.getElementById('show').innerHTML = show;
+				looper_stop = 0;
+				degrees = 0;
+			}
+			if(degrees > 0){
+				var show=array[Math.floor(Math.random() * array.length)];
+				document.getElementById('show').innerHTML = show;
+				looper = setTimeout('rand()',2);
+			}
+			degrees = degrees+2+looper_stop;
+			if(degrees > 35){
+				degrees = 1;
+				looper_stop++;
+			}
+		}
+
+		window.onload = function() {
+
+			var myShakeEvent = new Shake({
+				threshold: 15
+			});
+
+			myShakeEvent.start();
+
+			window.addEventListener('shake', shakeEventDidOccur, false);
+
+			function shakeEventDidOccur () {
+				rand(3);
+			}
+		};
+	</script>
+</head>
+<body  style="background-image:url(https://scontent.fbkk12-4.fna.fbcdn.net/v/t1.15752-9/83564715_1810082249122059_2981212129585004544_n.jpg?_nc_cat=103&_nc_ohc=0bYrLOY5KE4AX8-n1AI&_nc_ht=scontent.fbkk12-4.fna&oh=ed3a972078b0aa1a33174e5edfcc4311&oe=5ED51DD9);">
+	<div class="container text-center mt-5">
+		<div class="row" style="border: rgb(247, 116, 203) 4px solid; background-color: rgba(205, 92, 92, 0.548);" align="center">
+			<div class="col-md-12 mt-5">
+				<span style="margin-top: -100px;position: fixed;bottom: 0px;width: 100%;left: 0px;" id="imagef"></span>
+				
+				<img id="img1" >
+				<h1 style="color: #FFFFFF;width: 100%;height: 200px;word-break: break-all;" id="show">กินอะไรดีน้า!</h1>
+				
+				<button class="btn btn-primary" style="width: 20%; min-height: 80px;" onclick="rand();">กดซิ</button>
+				 <button type="button" class="btn btn-primary" style="width: 20%; min-height: 80px;" ><a href="/information" style="color: #fff;">ย้อนกลับ</a></button>
+				<br><br><br>
+			</div>
+		</div>
+	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</body>
+</html>

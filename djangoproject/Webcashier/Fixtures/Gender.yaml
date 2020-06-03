@@ -1,0 +1,25 @@
+- model: posts.Gender
+  pk: 1
+  fields:
+    name: ชาย
+- model: posts.Gender
+  pk: 2
+  fields:
+    name: หญิง
+- model: posts.Gender
+  pk: 3
+  fields:
+    name: อื่นๆ
+
+- model: lookinggreat.Gender 
+  pk: 1 
+  fields:
+    name: ชาย
+- model: lookinggreat.Gender 
+  pk: 2 
+  fields:
+    name: หญิง
+- model: lookinggreat.Gender 
+  pk: 3 
+  fields:
+    name: อื่นๆ

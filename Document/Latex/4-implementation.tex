@@ -1,0 +1,1177 @@
+\chapter{การพัฒนาระบบ}
+หลังจากที่ได้มีการเตรียมความพร้อมสำหรับการพัฒนาในด้านต่าง ไม่ว่าจะเป็นที่มาและความสำคัญของปัญหา เทคโนโลยีที่มีความเหมาะสมกับระบบ และการออกแบบระบบการทำงานรวมไปถึงโครงสร้างของข้อมูล ในบทนี้จะเป็นการพูดถึงการสร้างระบบที่ได้มีการออกแบบไว้ในบทที่แล้วจะถูกนำเสนอในบทนี้ โดยการพัฒนาระบบแบ่งได้เป็นส่วนต่าง ๆ ดังนี้
+	\begin{enumerate}[label=4.\arabic*]
+		\item การพัฒนาเว็บแอปพลิเคชัน
+		\item การพัฒนาเว็บแอปพลิเคชันแอนดรอยด์แอปพลิเคชัน
+	\end{enumerate}	
+
+\section{การพัฒนาเว็บแอปพลิเคชัน}
+	การพัฒนาระบบกองทุนเงินให้กู้ยืมเพื่อการศึกษาสำหรับเว็บแอปพลิเคชันนั้นวัตถุประสงค์หลังเพื่อสร้างความสะดวกต่อการกำงานของเจ้าหน้าที่อันเนื่องมาจากข้อจำกัดบางประการหากใช้ระบบทำงานบนอุปกรณ์สมาร์ทโฟนเพียงอย่างเดียว โดยตัวเว็บแอปพลิเคชันนี้ถูกพัฒนาขึ้นด้วย Vue.js มีรายละเอียดการทำงานดังนี้
+	
+	\subsection{การเชื่อมต่อ Cloud Firestore}bsection,
+	ในการเชื่อมต่อเว็บแอปพลิเคชันกับไฟร์เบสเพื่อใช้บริการต่างๆ ของไฟร์เบส ทำได้ดังนี้
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+export default {
+	apiKey: "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX",
+	authDomain: "e-student-698a5.firebaseapp.com",
+	databaseURL: "https://e-student-698a5.firebaseio.com",
+	projectId: "e-student-698a5",
+	storageBucket: "e-student-698a5.appspot.com",
+	messagingSenderId: "000000000000"
+}
+			\end{lstlisting}}
+		\caption{ไฟล์ firebaseConfig.js}
+		\label{Fig:firebaseConfig}
+	\end{figure}
+	จากภาพที่ \ref{Fig:firebaseConfig} โครงสร้างของไฟล์ firebaseConfig.js สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่  1	     เป็นการส่งออกโมดูลเพื่อใช้งานในไฟล์อื่น
+		\item บรรทัดที่  2 -7	เป็นการตั้งค่าระบุตัวตนเพื่อใช้งานบริการไฟร์เบส
+	\end{itemize}
+	
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+import firebase from 'firebase'
+import 'firebase/firestore'
+import firebaseConfig from './firebaseConfig'
+
+export default firebase.initializeApp(firebaseConfig)
+			\end{lstlisting}}
+		\caption{ไฟล์ firebaseInit.js}
+		\label{Fig:firebaseConfig}
+	\end{figure}
+	จากภาพที่ \ref{Fig:firebaseConfig} โครงสร้างของไฟล์ firebaseInit.js สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่  1	     เป็นการนำเข้าไลบรารีของไฟร์เบส
+		\item บรรทัดที่  2 	    เป็นการนำเข้าบริการ Cloud Firestore ของไฟร์เบส 
+		\item บรรทัดที่  8       เป็นการนำเข้าโมดูลตั้งค่าที่ได้จากรูปภาพที่ \ref{Fig:firebaseConfig}
+		\item บรรทัดที่  5 เป็นการส่งออกโมดูลไฟร์เบสเพื่อใช้ในไฟล์อื่น ๆ ซึ่งเมื่อถึงขั้นตอนนี้การเชื่อต่อบริการไฟร์เบสถือว่าเป็นอันเสร็จ
+	\end{itemize}
+	
+	\subsection{โครงสร้างของการสร้างหน้าเข้าสู่ระบบ}
+	\begin{figure}[H]
+	{\setstretch{1.0}\begin{lstlisting}
+<template>
+	<Row type="flex" justify="center" align="middle">
+	<Col span="8" class="col">
+	<Card style="width:400px">
+	<p slot="title">
+	<Icon type="ios-person" size="20"></Icon>
+	sign in
+	</p>
+	<a href="#" slot="extra" @click.prevent="SignUp">
+	create account
+	</a>
+	<Form class="form" ref="formInline" :model="formInline" :rules="ruleInline">
+	<FormItem prop="email">
+		<Input type="text" v-model="formInline.email" placeholder="email">
+		<Icon type="ios-email" slot="prepend"></Icon>
+		</Input>
+	</FormItem>
+	<FormItem prop="password">
+		<Input type="password" v-model="formInline.password" placeholder="password">
+		<Icon type="ios-locked" slot="prepend"></Icon>
+		</Input>
+	</FormItem>
+	<FormItem>
+	<Button type="primary" :loading="loading" @click="handleSubmit('formInline')">
+	<span v-if="!loading">sign in</span>
+	<span v-else>signing in...</span>
+	</Button>
+	</FormItem>
+	</Form>         
+	</Card>
+	</Col>
+	</Row>
+</template>
+		\end{lstlisting}}
+		\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าเข้าสู่ระบบ SignIn.vue}
+		\label{Fig:SignIn}
+	\end{figure}
+	
+	จากภาพที่ \ref{Fig:SignIn} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าเข้าสู่ระบบ สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-33  เป็นเทมเพลตที่ใช้เพื่อสี่อสารกับ Vue.js ให้แปลงข้อมูลดังกล่าวเป็น HTML
+		\item บรรทัดที่ 2-32 เป็นการความคุมลักษณะการแสดงผลบนหน้าจอ
+		\item บรรทัดที่ 3-31 เป็นการกำหนดขนาดของเนื้อภายใน
+		\item บรรทัดที่ 4-30 เป็นการแสดงเนื้อหาในรูปแบบการ์ด (Card)
+		\item บรรทัดที่ 5-8 เป็นส่วนที่ใช้สำหรับกำหนดหัวเรื่องของการ์ด
+		\item บรรทัดที่ 12 เป็นสร้างฟอร์ม (Form)
+		\item บรรทัดที่ 13 เป็นสร้างช่องกรอกข้อมูลอีเมล (e-mail) จากผู้ใช้
+		\item บรรทัดที่ 18 เป็นสร้างช่องกรอกข้อมูลรหัสผ่าน (password) จากผู้ใช้
+		\item บรรทัดที่ 24 สร้างปุ่มเข้าสู่ระบบ
+	\end{itemize}
+
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+data () {
+ return {
+  alert: false,
+  formInline: {
+   email: '',
+   password: ''
+  },
+  ruleInline: {
+   email: [
+    { required: true, message: 'please fill email', trigger: 'blur' }
+   ],
+   password: [
+    { required: true, message: 'please fill password', trigger: 'blur' }
+   ]
+  }
+ }
+}
+			\end{lstlisting}}
+		\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าเข้าสู่ระบบ SignIn.vue}
+		\label{Fig:SignIn}
+	\end{figure}
+	จากภาพที่ \ref{Fig:SignIn} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าเข้าสู่ระบบ สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-7  เป็นการสร้างชุดข้อมูลที่ใช้สำหรับการเข้าสู่ระบบ
+		\item บรรทัดที่ 3 ค่าที่ใช้เก็บสถานะของการเข้าสู่ระบบ
+		\item บรรทัดที่ 4-7 เป็นการเก็บข้อมูลอีเมลและรหัสผ่านในรูปแบบ json
+		\item บรรทัดที่ 8-15 เป็นการกำหนดกที่ใช้ในการตรวจสอบความถูกต้องของอีเมลและรหัสผ่าน
+	\end{itemize}
+	
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+userSignIn({commit}, payload) {
+ commit('setLoading', true)
+  firebase.auth().signInWithEmailAndPassword(payload.email, payload.password)
+  .then(firebaseUser => {
+ commit('setUser', firebaseUser)
+ commit('setLoading', false)
+ commit('setError', null)
+})
+.catch(error => {
+ commit('setError', error.message)
+ commit('setLoading', false)
+})
+}
+			\end{lstlisting}}
+		\caption{การสร้างลอจิก (logic) ของหน้าเข้าสู่ระบบ SignIn.vue}
+		\label{Fig:SignInJs}
+	\end{figure}
+	จากภาพที่ \ref{Fig:SignInJs} โครงสร้างลอจิกของหน้าเข้าสู่ระบบ สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1  เป็นการสร้างฟังก์ชันสำหรับรับข้อมูลที่ในการเข้าสู่ระบบ
+		\item บรรทัดที่ 2 เรียกใช้ฟังก์ชันอื่นเพื่อทำการอัพเดทสถานะการเข้าสู่ระบบ
+		\item บรรทัดที่ 3-12 เป็นการเรียกใช้บริการไฟร์เบส Authentication พร้อมส่งค่า email และ password เพื่อทำการเข้าสู่ระบบ
+		\item บรรทัดที่ 5-7 เป็นการอัพเดทสถานะเมื่อเข้าสู่ระบบสำเร็จ
+		\item บรรทัดที่ 9-12 เป็นการอัพเดทสถานะเมื่อเข้าสู่ระบบไม่สำเร็จ 
+	\end{itemize}
+	
+	\subsection{โครงสร้างของการสร้างหน้าข่าวสาร}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+<template>
+<div style="padding: 16px;">
+<Row>
+<Col span="20" style="padding:16px;">
+<Row v-for="(post,index) in postsData" :key="post.id" style="margin-bottom:16px;"> 
+<Card>
+<p slot="title">
+<Icon type="social-rss-outline"></Icon>
+post 
+<span style="font-size:11px; color: #95a5a6;"> 
+{{ post.time }}
+</span>
+</p>
+<a href="#" slot="extra" @click.prevent="showData(index)">
+<!-- <Icon type="ios-loop-strong"></Icon> -->
+detail
+</a>
+<p>
+{{ post.title }}
+</p>
+</Card>           
+</Row>
+</Col>
+<Col span="4" style="padding:16px;">
+<Timeline>
+<TimelineItem v-for="(event, index) in eventsData" :key="index" >
+<Icon type="trophy" slot="dot" v-if="index == 0"></Icon>
+<p class="time">{{event.time}}</p>
+<p class="content">{{event.title}}</p>
+</TimelineItem>
+</Timeline>
+</Col>
+</Row>
+</div>
+</template>
+			\end{lstlisting}}
+		\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าข่าวสาร Home.vue}
+		\label{Fig:Home}
+	\end{figure}
+	จากภาพที่ \ref{Fig:Home} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าข่าวสาร  สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-33  เป็นเทมเพลตที่ใช้เพื่อสี่อสารกับ Vue.js ให้แปลงข้อมูลดังกล่าวเป็น HTML
+		\item บรรทัดที่ 3-33 	    เป็นการความคุมลักษณะการแสดงผลบนหน้าจอ
+		\item บรรทัดที่ 6-21 เป็นการแสดงเนื้อหาในรูปแบบการ์ด (Card)
+		\item บรรทัดที่ 10-12 เป็นการแสดงเวลาที่ประกาศข่าว
+		\item บรรทัดที่ 18-20 เป็นการแสดงหัวข้อข่าวสาร
+		\item บรรทัดที่ 25-31 เป็นการแสดงปฏฺทินกำหนดการขนาดย่อ
+	\end{itemize}
+	
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+created() {
+ var vm = this;
+ vm.postsData = [];
+ db.collection("Posts")
+  .orderBy("time", "desc")
+  .get()
+  .then(function(querySnapshot) {
+   querySnapshot.forEach(function(doc) {
+   const data = {
+    id: doc.id,
+    title: doc.data().title,
+    description: doc.data().description,
+    time: doc.data().time.toLocaleString(),
+    fileUrl: doc.data().fileURL[0]
+   }
+  if(vm.postsData){
+   vm.postsData.push(data);
+  }
+ })
+})
+}
+				\end{lstlisting}}
+			\caption{การสร้างลอจิก(logic)ของหน้าข่าวสาร Home.vue}
+			\label{Fig:HomeJs}
+		\end{figure}
+		จากภาพที่ \ref{Fig:HomeJs} โครงสร้างลอจิกของหน้าข่าวสาร สามารถอธิบายการทำงานได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 1  เป็นการฟังก์ชันที่ถูกเรียกทุกครั้งที่ผู้ใช้เปิดหน้าข่าวสาร
+			\item บรรทัดที่ 4-20 เรียกใช้บริการ Cloude Firestore เพื่อทำการสืบค้นข้อมูลข่าวสารทั้งหมดพร้อมทั้งเรียงลำดับตามวันที่ประกาศ
+			\item บรรทัดที่ 9-18 เป็นการเพิ่มข้อมูลเข้าสู่ลิสต์รายการเพื่อใช้ในการแสดงบนหน้าจอ
+		\end{itemize}
+		
+	\subsection{โครงสร้างของการสร้างหน้าดูรายละเอียดข่าวสาร}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+<template>
+ <div>
+  <h2>{{ post.title }}</h2>
+  <p style="font-size:14px;">{{ post.description }}</p>
+  <br>
+  <img :src="post.fileURL"/>
+  </div>
+</template>
+				\end{lstlisting}}
+			\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้ารายละเอียดข่าวสาร ViewPost.vue}
+			\label{Fig:ViewPost}
+		\end{figure}
+			จากภาพที่ \ref{Fig:ViewPost} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าดูรายละเอียดข่าวสาร  สามารถอธิบายการทำงานได้ดังนี้
+			\begin{itemize}[label={--}]
+				\item บรรทัดที่ 1-8  เป็นเทมเพลตที่ใช้เพื่อสี่อสารกับ Vue.js ให้แปลงข้อมูลดังกล่าวเป็น HTML
+				\item บรรทัดที่ 2-7	 ครอบทับเนื้อหาทั้งหมดเพื่อให้ง่ายต่อการจัดการการแสดงผล
+				\item บรรทัดที่ 3 เป็นการแสดงหัวข้อข่าวสาร
+				\item บรรทัดที่ 4 เป็นการแสดงรายละเอียดข่าวสาร
+				\item บรรทัดที่ 6 เป็นการแสดงไฟล์แนบ
+			\end{itemize}
+			
+			\begin{figure}[H]
+				{\setstretch{1.0}\begin{lstlisting}
+created(){
+ let id = this.$route.params.id
+ db.collection('Posts').doc(id).get().then((doc) => {
+  if(doc.exists){
+   this.post = doc.data()
+  }
+ })
+}
+					\end{lstlisting}}
+				\caption{การสร้างลอจิกของหน้าดูรายละเอียดของข่าวสาร ViewPost.vue}
+				\label{Fig:HomeJs}
+			\end{figure}
+			จากภาพที่ \ref{Fig:HomeJs} โครงสร้างลอจิกของหน้าดูรายละเอียดของข่าวสาร สามารถอธิบายการทำงานได้ดังนี้
+			\begin{itemize}[label={--}]
+				\item บรรทัดที่ 1  เป็นการฟังก์ชันที่ถูกเรียกทุกครั้งที่ผู้ใช้เปิดหน้าดูรายละเอียดข่าวสาร
+				\item บรรทัดที่ 2 ดึงค่าไอดีของประกาศที่ถูกส่งมาจากหน้าแสดงข่าวสาร
+				\item บรรทัดที่ 3 ทำการสืบค้นข้อมูลข่าวสารจาก Cloud Firestore จากไอดีของประกาศ
+				\item บรรทัดที่ 4-6 เป็นการตรวจสอบว่ามีประกาศดังกล่าวอยู่ในฐานข้อมูล Cloude Firestore หรือไม่
+			\end{itemize}
+			
+	\subsection{โครงสร้างของการสร้างหน้าสนทนา}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+<template>
+<Row :gutter="0" type="flex" justify="center" align="middle">
+<Col span="16" style="padding: 0px;">
+<Card style="min-height: 500px;max-height: 500px;" :padding="0">
+<p v-if="!isAdmin" slot="title" style="text-align:center;">
+ESP
+</p>
+<p v-else slot="title" style="text-align:center;">
+{{ chatTitle }}
+</p>
+<Scroll style="background-color: #EEEEEE;">
+<ul style="padding:6px;padding-right:8px;">
+<li v-for="(item,index) in messages" :key="index" style="margin-bottom:8px;">
+<Card v-if="user.uid !== item.id" :padding="6" style="text-align:left;display: inline-block;background-color: #FAFAFA;">
+<div>
+<p>{{ item.message }}</p> 
+</div>
+</Card>
+<div  v-else  style="text-align:right;">
+<Card :padding="6" style="display: inline-block;background-color: #B2E281;">
+<p>{{ item.message }}</p>
+</Card>
+</div>
+</li>
+</ul>
+</Scroll>
+<div style="padding:16px;text-align:right;" >
+<Input type="textarea" v-model="formItem.message" placeholder="type..." v-on:keyup.enter="send"></Input>
+<Button :loading="loading" type="primary" style="margin-top:10px;" size="large" @click="send">send</Button>
+</div>
+</Card>
+</Col>
+</Row>
+</template>
+			\end{lstlisting}}
+		\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าสนทนา Message.vue}
+		\label{Fig:Message}
+	\end{figure}
+	จากภาพที่ \ref{Fig:Message} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าสนทนา สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-34  เป็นเทมเพลตที่ใช้เพื่อสี่อสารกับ Vue.js ให้แปลงข้อมูลดังกล่าวเป็น HTML
+		\item บรรทัดที่ 4-22 แสดงหน้าต่างสนทนา
+		\item บรรทัดที่ 9 แสดงชื่อคู่สนทนา
+		\item บรรทัดที่ 11-26 แสดงข้อความสนทนา
+		\item บรรทัดที่ 28 แสดงช่องกรอกข้อความสนทนา
+		\item บรรทัดที่ 29 แสดงปุ่มกดส่งข้อความ
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+send() {
+ var vm = this;
+ vm.loading = true;
+ this.formItem.time = new Date();
+
+// check where data shulde update
+ let key = "";
+ if (this.isAdmin) {
+  key = this.chatId;
+   if (this.chatTitle === "" || this.chatTitle === null) {
+    return;
+   }
+ } else {
+   key = this.formItem.senderId;
+ }
+
+ this.formItem.name = this.user.displayName;
+ this.formItem.photo = this.user.photoURL
+
+ db
+ .collection("Chats")
+ .doc(key)
+ .collection("messages")
+ .add(this.formItem)
+ .then(function(docRef) {
+   vm.loading = false;
+   vm.formItem.message = "";
+   db
+   .collection("Users")
+   .doc(key)
+   .update({ lastChat: new Date() })
+   .catch(function(error) {
+    vm.$Message.error("send message fail");
+    vm.loading = false;
+   });
+ });
+}
+			\end{lstlisting}}
+		\caption{การสร้างลอจิกของหน้าสนทนา Message.vue}
+		\label{Fig:MessageJs}
+	\end{figure}
+	\newpage
+	จากภาพที่ \ref{Fig:MessageJs} โครงสร้างลอจิกของหน้าสนทนา สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1  ชื่อฟังก์ชัน
+		\item บรรทัดที่ 2 ตรวจสอบไอดีของผู้ใช้
+		\item บรรทัดที่ 3 ดึงค่าโปรไฟล์ผู้ใช้คนปัจจุบัน
+		\item บรรทัดที่ 4-6 เขียนข้อมูลลงฐานข้อมูล Cloud Firestore โดยระบุ path ที่จะทำการจัดเก็บชุดข้อมูล
+		\item บรรทัดที่ 28-35 อัพเดทข้อมูลเวลาสนทนาล่าสุดของผู้ใช้
+		\item บรรทัดที่ 33 แสดงสถานะการอัพเดทข้อมูล
+	\end{itemize}
+
+	\subsection{โครงสร้างของการสร้างหน้าปฏิทินแสดงกำหนดการ}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+<template>
+ <div>
+  <Row :gutter="16">
+   <Col span="6">
+    <Card>
+     <h3>search</h3>
+     <DatePicker v-model="filterDate" format="d-M-yyyy" type="date" size="large" placeholder="select date" style="margin-top:6px;"></DatePicker> 
+    </Card>
+   </Col>
+   <Col span="18"> 
+    <h3>Schedule</h3>
+    <Table border 
+      :loading="dataLoading" 
+      :columns="columnsName" 
+      :data="eventsData"
+      no-data-text="no schedule"
+      style="margin-top:6px;">
+    </Table> 
+   </Col>
+  </Row>
+ </div>
+</template>
+			\end{lstlisting}}
+		\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าปฏิทินกำหนดการ Schedule.vue}
+		\label{Fig:Schedule}
+	\end{figure}
+	จากภาพที่ \ref{Fig:Schedule} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าปฏิทินกำหนดการ สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-22  เป็นเทมเพลตที่ใช้เพื่อสี่อสารกับ Vue.js ให้แปลงข้อมูลดังกล่าวเป็น HTML
+		\item บรรทัดที่ 4-9 แสดงหน้าต่างเลือกวันที่เพื่อค้นหา
+		\item บรรทัดที่ 11 แสดงชื่อตาราง
+		\item บรรทัดที่ 12-18 แสดงตารางกำหนดการ
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+created() {
+ var vm = this;
+ db.collection("Events")
+ .orderBy("time")
+ .onSnapshot(function(querySnapshot) {
+  vm.dataLoading = false;
+  vm.eventsData = [];
+  querySnapshot.forEach((doc) => {
+   const data = {
+    'id': doc.id,
+    'title': doc.data().title,
+    'description': doc.data().description,
+    'time': `${doc.data().time.getDate()}-${doc.data().time.getMonth()}-${doc.data().time.getFullYear()}`
+   }
+   vm.eventsData.push(data)
+  })
+ })
+}
+			\end{lstlisting}}
+		\caption{การสร้างลอจิกของหน้าปฏิทินกำหนดการ Schedule.vue}
+		\label{Fig:ScheduleJs}
+	\end{figure}
+	จากภาพที่ \ref{Fig:ScheduleJs} โครงสร้างลอจิกของหน้าปฏิทินกำหนดการ สามารถอธิบายการทำงานได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-18 ชื่อฟังก์ชันที่จะถูกเรียกทุกครั้งที่หน้าปฏิทินกำหนดการถูกเปิด
+		\item บรรทัดที่ 3-17 สืบค้นกำหนดการจากฐานข้อมูลโดยมีการเรียงลำดับจากวันที่ล่าสุดไปยังวันที่ก่อนหน้า
+		\item บรรทัดที่ 9-15 จัดเก็บข้อมูลที่สืบค้นได้ เพื่อใช้ในการแสดงผลบนหน้าจอ
+	\end{itemize}
+	
+		\subsection{โครงสร้างของการสร้างหน้าสร้างประกาศ}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+<Modal  v-model="modalNewPost"
+title="add post">
+ <Form :model="formItem" :label-width="80">
+  <FormItem label="title">
+   <Input v-model="formItem.title" placeholder="Enter something..."></Input>
+  </FormItem>
+  <FormItem label="detail">
+   <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}" placeholder="Enter something..."></Input>
+  </FormItem>
+  <FormItem label="target">
+   <Select v-model="formItem.collection">
+    <Option value="public">public</Option>
+    <Option value="group">group</Option>
+    <Option value="volunteer">volunteer</Option>
+   </Select>
+  </FormItem>
+  <FormItem  label="contact list" v-if="tags.length > 0">
+    <Tag closable color="blue" v-for="tag in tags" :key="tag" @on-close="handleClose"> {{ tag }} </Tag>
+  </FormItem>
+  <FormItem label="file">
+   <Upload :before-upload="handleUpload"
+     action="https://shielded-earth-61349.herokuapp.com/">
+    <Button :type="btnAddPostType" icon="ios-cloud-upload-outline"> {{ uploadBtnTile }} </Button>
+   </Upload>
+  </FormItem>
+ </Form>
+ <div slot="footer">
+  <Button type="primary" :loading="loading" @click="newPost">save</Button>
+  <Button type="ghost" style="margin-left: 8px" @click="modalNewPost = !modalNewPost">cancle</Button>
+ </div>
+</Modal>
+				\end{lstlisting}}
+			\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าสร้างประกาศ MgPost.vue}
+			\label{Fig:MgPost}
+		\end{figure}
+		จากภาพที่ \ref{Fig:ViewPost} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าสร้างประกาศ สามารถอธิบายการทำงานได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 1-31  เนื่องจากต้องการให้แสดงหน้าเพิ่มข่าวสารเป็นป๊อปอัพ (Pop up)  จึงใช้แท็ก(tag) <Model></Model>
+			\item บรรทัดที่ 2-7	 ครอบทับเนื้อหาทั้งหมดเพื่อให้ง่ายต่อการจัดการการแสดงผล
+			\item บรรทัดที่ 3-26 เป็นการสร้างฟอร์มรับข้อมูล
+			\item บรรทัดที่ 4-25 เป็นสร้างช่องรับข้อมูลประกาศ
+			\item บรรทัดที่ 5 เป็นการรับค่าหัวเรื่องประกาศ
+			\item บรรทัดที่ 8 เป็นการรับค่ารายละเอียดประกาศ
+			\item บรรทัดที่ 11-15 เป็นการรับค่ากลุ่มเป้าหมายของประกาศนั้นๆ
+			\item บรรทัดที่ 21-24 เป็นการสร้างปุ่มอัพโหลดไฟล์
+			\item บรรทัดที่ 28 เป็นการสร้างปุ่มบันทึกประกาศ
+			\item บรรทัดที่ 29 เป็นการสร้างปุ่มยกเลิกประกาศ
+		\end{itemize}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+newPost(){ 
+ let key = '';
+ var vm = this;
+ vm.formItem.time = new Date();
+ vm.formItem.tags = vm.tags
+ db.collection("Posts").add(this.formItem)
+  .then(function(docRef) {
+   key = docRef.id;
+   if(vm.file != null){
+    let storageRef = storage.ref('Posts/'+key);
+    let fileRef = storageRef.child(vm.file.name+"");
+    fileRef.put(vm.file).then(function(snapshot) {
+    db.collection("Posts").doc(key)
+   .update(
+    {
+     fileURL: snapshot.metadata.downloadURLs[0],
+     fileType: vm.file.name.slice(vm.file.name.lastIndexOf('.')) + "",
+     fileName: vm.file.name
+   }
+ ).then(() => {
+   vm.$Notice.success({
+     title: 'Your post was created',
+     desc: ''
+   });
+})
+.catch(function(error) {
+  vm.$Notice.warning({
+  title: 'create post fail',
+  desc:''
+});
+}
+				\end{lstlisting}}
+			\caption{การสร้างลอจิกของหน้าหน้าสร้างประกาศ MgPost.vue}
+			\label{Fig:MgPostJs}
+		\end{figure}
+		จากภาพที่ \ref{Fig:MgPostJs} โครงสร้างลอจิกของหน้าสร้างประกาศ สามารถอธิบายการทำงานได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 1 ชื่อฟังก์ชัน
+			\item บรรทัดที่ 4-5 ข้อมูลของประกาศ
+			\item บรรทัดที่ 6-30 เรียกใช้งาน Cloud Firestore เพื่อบันทึกประกาศลงฐานข้อมูล
+			\item บรรทัดที่ 10-24 เป็นส่วนที่ใช้ในการอัพโหลดเอกสารแนบไปยังไฟร์เบส Storage
+			\item บรรทัดที่ 13-19 เป็นการอัพเดทข้อมูล URL ที่ได้จากการอัพโหลดไฟล์แนบเข้าสู่ฐานข้อมูล Cloud Firestore
+		\end{itemize}
+		
+		\subsection{โครงสร้างของการสร้างหน้าอัพโหลดเอกสารที่เกี่ยวข้อง}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+ <Modal  v-model="modalNewDoc"
+ title="Upload File">
+  <Form :model="formItem" :label-width="80">
+   <FormItem label="Document title">
+    <Input v-model="formItem.title"></Input>
+   </FormItem>
+   <FormItem label="Document detail">
+    <Input v-model="formItem.description" type="textarea" :autosize="{minRows: 2,maxRows: 5}"></Input>
+   </FormItem>
+   <FormItem label="Select file">
+    <Upload
+    :before-upload="handleUpload"
+    action="https://shielded-earth-61349.herokuapp.com/">
+     <Button :type="type" icon="ios-cloud-upload-outline"> {{ uploadBtnTile }} </Button>
+    </Upload>
+   </FormItem>
+  </Form>
+  <div slot="footer">
+   <Button type="primary" :loading="loading" @click="newDoc">upload</Button>
+   <Button type="ghost" style="margin-left: 8px" @click="modalNewDoc = !modalNewDoc">cancle</Button>
+  </div>
+ </Modal>
+				\end{lstlisting}}
+			\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าอัพโหลดเอกสารที่เกี่ยวข้อง MgDocument.vue} %TODO ตัวหนังสือแปลกๆ
+			\label{Fig:MgDocument}
+		\end{figure}
+		จากภาพที่ \ref{Fig:MgDocument} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าอัพโหลดเอกสารที่เกี่ยวข้อง สามารถอธิบายการทำงานได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 1-22 สร้างป๊อปอัพแสดงหน้าอัพโหลดไฟล์เอกสาร
+			\item บรรทัดที่ 3-17 สร้างฟอร์ม
+			\item บรรทัดที่ 11-15 สร้างปุ่มอัพโหลดเอกสาร
+			\item บรรทัดที่ 19 สร้างปุ่มบันทึกเอกสาร
+			\item บรรทัดที่ 20 สร้างปุ่มยกเลิกการอัพโหลดเอกสาร  
+		\end{itemize}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+newDoc(){
+ var vm = this;
+ vm.loading = true;
+ let key = '';
+ this.formItem.time = new Date();
+ db.collection("Docs").add(this.formItem)
+ .then(function(docRef) {
+  key = docRef.id;
+  if(vm.file != null){
+   let storageRef = storage.ref('Docs/'+key);
+   let fileRef = storageRef.child(vm.file.name+"");
+   fileRef.put(vm.file).then(function(snapshot) {
+    db.collection("Docs").doc(key).update({
+      fileURL: snapshot.metadata.downloadURLs[0],
+      fileType: vm.file.name.slice(vm.file.name.lastIndexOf('.'))
+    }).then(() => {
+     vm.$Notice.success({
+       title: 'Success',
+      desc: ''
+    });
+  }).catch(function(error) {
+   vm.$Notice.warning({
+     title: 'Fail',
+     desc:''
+   });
+ });
+}
+
+				\end{lstlisting}}
+			\caption{การสร้างลอจิกของหน้าหน้าอัพโหลดเอกสารที่เกี่ยวข้อง MgDocument.vue}
+			\label{Fig:MgDocumentJs}
+		\end{figure}
+		จากภาพที่ \ref{Fig:MgDocumentJs} โครงสร้างลอจิกของหน้าสร้างประกาศ สามารถอธิบายการทำงานได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 6-26 เป็นการอัพเดทข้อมูลเอกสารเข้าสู่ฐานข้อมูล Cloud Firestore
+			\item บรรทัดที่ 10-12 เป็นการเรียกใช้ไฟร์เบส Storage เพื่อทำการอัพโหลดไฟล์เอกสาร
+			\item บรรทัดที่ 13-20 ใช้ในการอัพเดทข้อมูล URL ไปยังฐานข้อมูล Cloude Firestore
+		\end{itemize}
+		
+		\subsection{โครงสร้างของการสร้างหน้าสร้างกำหนดการจองคิวส่งเอกสาร}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+<Modal v-model="modalNewQueue">
+ <p slot="header" style="color:#3498db;text-align:center">
+  <Icon type="information-circled"></Icon>
+  <span>Create sumbit document date</span>
+ </p>
+ <div>
+  <Form :model="formItem" :label-width="80">
+   <FormItem label="title">
+    <Input v-model="formItem.title"></Input>
+   </FormItem>
+   <FormItem label="date">
+    <DatePicker  v-model="formItem.date" format="d-MMMM-yyyy" type="daterange" placement="bottom-end" placeholder="select" style="width: 200px"></DatePicker>
+   </FormItem>
+   <FormItem label="time">
+    <TimePicker v-model="formItem.time" format="HH:mm" type="timerange" placement="bottom-end" placeholder="select" style="width: 200px"></TimePicker>
+   </FormItem>
+   <FormItem label="students per hr">
+    <InputNumber :max="100" :min="1" v-model="formItem.count" style="width: 200px"></InputNumber>
+   </FormItem>
+  </Form>
+ </div>
+ <div slot="footer">
+   <Button type="success" size="large" long @click="saveQueue">save</Button>
+ </div>
+</Modal>
+				\end{lstlisting}}
+			\caption{การสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าสร้างกำหนดการจองคิวส่งเอกสาร MgQueue.vue}
+			\label{Fig:MgQueue}
+		\end{figure}
+		จากภาพที่ \ref{Fig:MgQueue} โครงสร้างของการสร้างหน้าจอส่วนติดต่อผู้ใช้ของหน้าสร้างกำหนดการจองคิวส่งเอกสาร สามารถอธิบายการทำงานได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 1-25 การสร้างหน้าต่างป๊อปอัพ
+			\item บรรทัดที่ 4 ชื่อหน้าต่างป๊อปอัพ
+			\item บรรทัดที่ 7-20 เป็นการสร้างฟอร์ม
+			\item บรรทัดที่ 23 เป็นการสร้างปุ่มบันทึกกำหนดการ
+		\end{itemize}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+saveQueue(){
+ var vm = this;
+ db.collection("Queue").add(this.formItem)
+ .then(function(docRef) {
+   vm.modalNewQueue = false;
+   vm.$Notice.success({
+     title: 'success',
+     desc: ''
+   });
+ }).catch(function(){
+   vm.modalNewQueue = false;
+   vm.$Notice.warning({
+     title: 'fial',
+     desc:''
+  });
+ })
+}
+				\end{lstlisting}}
+			\caption{การสร้างลอจิกของหน้าสร้างกำหนดการจองคิวส่งเอกสาร MgQueue.vue}
+			\label{Fig:MgQueueJs}
+		\end{figure}
+		จากภาพที่ \ref{Fig:MgQueueJs} โครงสร้างลอจิกของหน้าสร้างกำหนดการจองคิวส่งเอกสาร สามารถอธิบายการทำงานได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 3-15 ที่ได้จากการอัพโหลดไฟล์แนบเข้าสู่ฐานข้อมูล Cloud Firestore
+		\end{itemize}
+
+\section{การพัฒนาเว็บแอปพลิเคชันแอนดรอยด์แอปพลิเคชัน}
+		การพัฒนาเว็บแอปพลิเคชันแอนดรอยด์แอปพลิเคชันระบบกองทุนเงินให้กู้ยืมเพื่อการศึกษาคณะวิทยาศาสตร์ มหาวิทยาลัยอุบลราชธานี มีวัตถุประสงค์หลักเพื่ออำนวยความสะดวกต่อนักศึกษาที่โดยส่วนใหญ่ใช้อุปกรณ์พกพาและต้องการใช้งานฮาร์ดแวร์(Hardware)เช่น กล้องที่ใช้ในการถ่ายภาพสำเนาเอกสาร เป็นต้น
+	\subsection{โครงสร้างของการสร้างหน้า MainActivity}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+private FirebaseAuth mAuth;
+private FeedFragment feedFrag = FeedFragment.newInstance();
+private ChatFragment chatFrag = ChatFragment.newInstance();
+private DocumentsFragment docFrag = DocumentsFragment.newInstance();
+private ScheduleFragment sheduleFrag = ScheduleFragment.newInstance();
+private SubmitFragment submitFrag = SubmitFragment.newInstance();
+private UserChatFragment userChatFrag = UserChatFragment.newInstance();
+private CheckinFragment checkinFrag = CheckinFragment.newInstance();
+				\end{lstlisting}}
+			\caption{ตัวแปรในคลาส MainActivity}
+			\label{Fig:MainActivity}
+		\end{figure}
+		จากภาพที่ \ref{Fig:MainActivity} ตัวแปรที่ประกาศขึ้นเพื่อใช้ในการทำงานของคลาส MainActivity สามารถอธิบายได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 1 ตัวแปร mAuth ใช้ในการจัดเก็บสถานะและข้อมูลของผู้ใช้
+			\item บรรทัดที่ 2 ตัวแปร feedFrag ใช้แสดงผลหน้าจอข่าวสาร  
+			\item บรรทัดที่ 3 ตัวแปร chatFrag ใช้แสดงผลหน้าจอสนทนาสำหรับเจ้าหน้าที่
+			\item บรรทัดที่ 4 ตัวแปร chatFrag ใช้แสดงผลหน้าจอเอกสารที่เกี่ยวข้อง
+			\item บรรทัดที่ 5 ตัวแปร scheduleFrag ใช้แสดงผลหน้าจอปฏิทินกำหนดการ
+			\item บรรทัดที่ 6 ตัวแปร submitFrag ใช้แสดงผลหน้าจอส่งสำเนาเอกสาร 
+			\item บรรทัดที่ 7 ตัวแปร userChatFrag ใช้แสดงผลหน้าจอสนทนาสำหรับนักศึกษา
+			\item บรรทัดที่ 8 ตัวแปร checkinFrag ใช้แสดงผลหน้าจอจองคิวส่งเอกสาร
+		\end{itemize}
+		\begin{figure}[H]
+			{\setstretch{1.0}\begin{lstlisting}
+new DrawerBuilder()
+.addDrawerItems(
+   feed, chat, event, doc, submit, checkin, faq, about, setting, account, logout
+).withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+@Override
+  public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+    long id = drawerItem.getIdentifier();
+   if (id == 1) {
+     getSupportFragmentManager().beginTransaction()
+     .replace(R.id.contentContainer, feedFrag)
+     .commit();
+   } else if (id == 2) {
+    if (currentUser.getEmail().contains("tapgabee")) {
+      getSupportFragmentManager().beginTransaction()
+      .replace(R.id.contentContainer, chatFrag)
+      .commit();
+    } else {
+       getSupportFragmentManager().beginTransaction()
+       .replace(R.id.contentContainer, userChatFrag)
+       .commit();
+    }
+   } else if (id == 3) {
+      getSupportFragmentManager().beginTransaction()
+      .replace(R.id.contentContainer, sheduleFrag)
+      .commit();
+   } else if (id == 4) {
+      getSupportFragmentManager().beginTransaction()
+      .replace(R.id.contentContainer, docFrag)
+      .commit();
+   }else if (id == 5) {
+      getSupportFragmentManager().beginTransaction()
+      .replace(R.id.contentContainer, submitFrag)
+      .commit();
+   } else if (id == 6) {
+      getSupportFragmentManager().beginTransaction()
+      .replace(R.id.contentContainer, checkinFrag)
+      .commit();
+   } else if (id == 11) {
+      mAuth.signOut();
+      startActivity(new Intent(MainActivity.this, MainActivity.class));
+      finish();
+   }
+}
+				\end{lstlisting}}
+			\caption{โค๊ดส่วนที่ใช้ในการสร้างเมนูนำทางหลักภายในคลาส MainActivity}
+			\label{Fig:MainActivity2}
+		\end{figure}
+
+		จากภาพที่ \ref{Fig:MainActivity2} สามารถอธิบายการทำงานโค๊ดส่วนที่ใช้ในการสร้างเมนูนำทางหลักภายในคลาส MainActivity ได้ดังนี้
+		\begin{itemize}[label={--}]
+			\item บรรทัดที่ 1 เป็นการสร้างเมนูนำทาง
+			\item บรรทัดที่ 2-3 เป็นการเพิ่ม Fragment ต่างๆ เข้าไปยังเมนูนำทาง
+			\item บรรทัดที่ 4-6 เป็นการเพิ่มการดักจับอีเวนต์ (Event) เพื่อสลับหน้าจอการแสดงผลที่เกิดขึ้นเมื่อผู้ใช้กดที่เมนูนำทาง
+			\item บรรทัดที่ 8-11 เป็นการแสดงผลหน้าข่าวสาร
+			\item บรรทัดที่ 13-16 เป็นการแสดงผลหน้าสนทนาสำหรับเจ้าหน้าที่
+			\item บรรทัดที่ 17-20 เป็นการแสดงผลหน้าสนทนาสำหรับนักศึกษา
+			\item บรรทัดที่ 22-25 เป็นการแสดงผลหน้าปฏิทินกำหนดการ
+			\item บรรทัดที่ 26-29 เป็นการแสดงผลหน้าดาวน์โหลดเอกสาร
+			\item บรรทัดที่ 30-33 เป็นการแสดงผลหน้าส่งสำเนาเอกสาร
+			\item บรรทัดที่ 34-37 เป็นการแสดงผลหน้าจองคิวส่งเอกสาร
+			\item บรรทัดที่ 38-41 เป็นการรีเฟรช(refresh)หน้าจอเมื่อผู้ใช้กดปุ่มออกจากระบบ
+		\end{itemize}
+	
+	\subsection{โครงสร้างของการสร้างหน้า FeedFragment}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+private RecyclerView recyclerView;
+private FirebaseFirestore db;
+private ArrayList<Post> posts;
+private FeedItemAdapter adapter;
+			\end{lstlisting}}
+		\caption{ตัวแปรในคลาส FeedFragment}
+		\label{Fig:FeedFragment}
+	\end{figure}
+	จากภาพที่ \ref{Fig:FeedFragment} ตัวแปรที่ประกาศขึ้นเพื่อใช้ในการทำงานของคลาส FeedFragment สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1 ตัวแปร recyclerView ใช้ในการแสดงข้อมูลลิสต์รายการข่าวสาร
+		\item บรรทัดที่ 2 ตัวแปร db ใช้ในการสืบค้นข้อมูลจากข่าวสารจาก Cloud Firestore 
+		\item บรรทัดที่ 3 ตัวแปร posts ใช้ในการเก็บชุดข้อมูลที่ได้จากการสืบค้นข้อมูล
+		\item บรรทัดที่ 4 ตัวแปร adapter ใช้ในการแปลงชุดข้อมูลเป็นลิสต์รายการเพื่อแสดงบน recyclerView
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+db.collection("Posts")
+.orderBy(getString(R.string.key_time), Query.Direction.DESCENDING)
+.get()
+.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+  @Override
+  public void onComplete(@NonNull Task<QuerySnapshot> task) {
+    if (task.isSuccessful() && isAdded()) {
+      for (DocumentSnapshot document : task.getResult()) {
+        Log.d(TAG, document.getId() + " => " + document.getData());
+        Map<String, Object> data = document.getData();
+        Post post = new Post();
+        post.setTitle(data.get(getString(R.string.key_title)).toString());
+        post.setCollection(data.get(getString(R.string.key_collection)).toString());
+        post.setDate((Date)data.get(getString(R.string.key_time)));
+        post.setDescription(data.get(getString(R.string.key_description)) == null ? "" : data.get(getString(R.string.key_description)).toString());
+        post.setFileURL(data.get(getString(R.string.key_fileURL)) == null ? "" : data.get(getString(R.string.key_fileURL)).toString());
+        post.setFileName(data.get(getString(R.string.key_fileName)) == null ? "" : data.get(getString(R.string.key_fileName)).toString());
+       posts.add(post);
+    }
+   recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+   recyclerView.setAdapter(adapter);
+   adapter.notifyDataSetChanged();
+  } else {
+    Log.w(TAG, "Error getting documents.", task.getException());
+  }
+ }
+});
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการสืบค้นข้อมูลจาก Cloude Firestore ภายในคลาส FeedFragment}
+		\label{Fig:FeedFragment2}
+	\end{figure}
+	จากภาพที่ \ref{Fig:FeedFragment2} โค๊ดส่วนที่ใช้ในการสืบค้นข้อมูลจาก Cloude Firestore ภายในคลาส FeedFragment สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-3 เริ่มทำการสืบค้นข้อมูลประกาศทั้งหมดพร้อมทั้งเรียงลำดับข้อมูลจากประกาศล่าสุดก่อน
+		\item บรรทัดที่ 4-18 รับผลการสืบค้นพร้อมทั้งเพิ่มข้อมูลที่ได้แต่ละแถวเข้าไว้ที่ตัวแปร posts 
+		\item บรรทัดที่ 20-22 ทำการอัพเดทข้อมูลที่แสดงอยู่บน recyclerView
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+@Override
+public void recyclerViewListClicked(View v, int position) {
+  Intent intent = new Intent(getActivity(), PostDetailActivity.class);
+  intent.putExtra(getString(R.string.key_title), posts.get(position).getTitle());
+  intent.putExtra(getString(R.string.key_collection), posts.get(position).getCollection());
+  intent.putExtra(getString(R.string.key_time), posts.get(position).getDate());
+  intent.putExtra(getString(R.string.key_description), posts.get(position).getDescription());
+  intent.putExtra(getString(R.string.key_fileURL), posts.get(position).getFileURL());
+  intent.putExtra(getString(R.string.key_fileName), posts.get(position).getFileName());
+  if (getActivity() != null)
+    getActivity().startActivity(intent);
+}
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการดักอีเวนต์เมื่อผู้ใช้กดที่แถวประกาศในคลาส FeedFragment}
+		\label{Fig:FeedFragment3}
+	\end{figure}
+	จากภาพที่ \ref{Fig:FeedFragment3}{โค๊ดส่วนที่ใช้ในการดักอีเวนต์เมื่อผู้ใช้กดที่แถวประกาศในคลาส FeedFragment สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1 ประกาศตัวแปร intent ประเภทตัวแปร Intent เพื่อใช้กำหนดแอคทิวิตี้ปลายทางซึ่งในที่นี้คือ PostDetailActivity
+		\item บรรทัดที่ 4-9 เป็นการเพิ่มข้อมมูลเข้าเก็บไว้ที่ตัวแปร intent โดยดึงข้อมูลใน posts มาจากตำแหน่งแถวที่ถูกผู้ใช้กด
+		\item บรรทัดที่ 11 เริ่มการทำงานของแอคทิวิตี้ PostDetailActivity
+	\end{itemize}
+
+	\subsection{โครงสร้างของการสร้างหน้า PostDetailActivity}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+private TextView tvTitle, tvDescription, tvCollection, tvDate;
+private String strTitle, strDescription, strDate, strCollection, strFileURl, strFileName;
+private FloatingActionButton fab;
+private DownloadManager downloadManager;
+
+strTitle = getIntent().getStringExtra(getString(R.string.key_title));
+strDescription = getIntent().getStringExtra(getString(R.string.key_description));
+strDate = getIntent().getStringExtra(getString(R.string.key_time));
+strCollection = getIntent().getStringExtra(getString(R.string.key_collection));
+strFileURl = getIntent().getStringExtra(getString(R.string.key_fileURL));
+strFileName = getIntent().getStringExtra(getString(R.string.key_fileName));
+tvTitle.setText(strTitle);
+tvDescription.setText(strDescription);
+tvDate.setText(strDate);
+tvCollection.setText(strCollection);
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการแสดงผลรายละเอียดประกาศของคลาส PostDetailActivity}
+		\label{Fig:PostDetailActivity}
+	\end{figure}
+	จากภาพที่ \ref{Fig:PostDetailActivity} โค๊ดส่วนที่ใช้ในการแสดงผลรายละเอียดประกาศของคลาส  PostDetailActivity สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-4 เป็นการประกาศตัวแปรที่ใช้ในการเก็บข้อมูลประกาศ
+		\item บรรทัดที่ 6-11 เป็นการดึงค่าที่ถูกส่งมาจากคลาส FeedFragment ผ่านทาง Intent
+		\item บรรทัดที่ 12-15 เป็นการแสดงผลข้อมูลต่างๆ ออกทางหน้าจอแสดงผล
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+@Override
+public void onClick(View v) {
+  int id = v.getId();
+  if (id == R.id.fab) {
+    downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
+    Uri uri = Uri.parse(strFileURl);
+    DownloadManager.Request request = new DownloadManager.Request(uri);
+    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, strFileName);
+   downloadManager.enqueue(request);
+  }
+}
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการดาวน์โหลดเอกสารของคลาส PostDetailActivity}
+		\label{Fig:PostDetailActivity2}
+	\end{figure}
+	จากภาพที่ \ref{Fig:PostDetailActivity2} โค๊ดส่วนที่ใช้ในการดาวน์โหลดเอกสารของคลาส PostDetailActivity สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-2 เช็คว่าอีเวนต์ที่เกิดขึ้นมาจากปุ่มดาวน์โหลดเอกสารหรือไม่
+		\item บรรทัดที่ 5-9 เป็นการเตรียมความพร้อมสำหรับการดาวน์โหลดเอกสาร
+		\item บรรทัดที่ 10 ทำการเริ่มดาวน์โหลดเอกสาร
+	\end{itemize}
+	
+	\subsection{โครงสร้างของการสร้างหน้า ChatActivity}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+private FirebaseFirestore db;
+private MessagesListAdapter adapter;
+private MessagesList messagesList;
+private String senderId;
+private String name;
+private String avatar;
+private FirebaseAuth mAuth;
+private EditText tvMessage;
+private FirebaseUser currentUser;
+private Button btnSend;
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการแสดงผลรายละเอียดประกาศของคลาส ChatActivity}
+		\label{Fig:ChatActivity}
+	\end{figure}
+	จากภาพที่ \ref{Fig:ChatActivity} โค๊ดส่วนที่ใช้ในการแสดงผลรายละเอียดประกาศของคลาส ChatActivity สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1 ตัวแปร db ใช้ในการสืบค้นช้อมูลจาก Cloud Firestore
+		\item บรรทัดที่ 2 ตัวแปร adapter ใช้ในการแปลงชุดข้อมูลที่ได้จากการสืบค้นเป็นลิสต์รายการ
+		\item บรรทัดที่ 3 ตัวแปร messagesList ใช้ในการแสดงบทสนทนา
+		\item บรรทัดที่ 4 ตัวแปร senderId ใช้ในการจัดเก็บไอดีของผู้ใช้
+		\item บรรทัดที่ 5 ตัวแปร name ใช้ในการจัดเก็บชื่อของผู้ใช้
+		\item บรรทัดที่ 6 ตัวแปร avatar ใช้ในการจัดเก็บ url รูปภาพของผู้ใช้
+		\item บรรทัดที่ 7 ตัวแปร mAuth ใช้ในการจัดเก็บสถานะและข้อมูลของผู้ใช้
+		\item บรรทัดที่ 8 ตัวแปร tvMessage ใช้ในการกรอกข้อความ
+		\item บรรทัดที่ 9 ตัวแปร currentUser ใช้ในการจัดเก็บสถานะและข้อมูลของผู้ใช้คนปัจจุบัน
+		\item บรรทัดที่ 10 ตัวแปร btnSend เป็นปุ่มที่ใช้สำหรับกดส่งข้อความ
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+db.collection("Chats").document(key).collection("messages")
+.orderBy("time")
+.addSnapshotListener(new EventListener<QuerySnapshot>() {
+@Override
+public void onEvent(QuerySnapshot documentSnapshots, FirebaseFirestoreException e) {
+  if (e != null) {
+     System.err.println("Listen failed:" + e);
+     return;
+  }
+
+  String id;
+  String usrId;
+  String text;
+  Date createdAt;
+  adapter.clear();
+  for (DocumentSnapshot document : documentSnapshots) {
+     Map<String, Object> data = document.getData();
+     id = document.getId();
+     text = data.get("message").toString();
+     createdAt = (Date) data.get("time");
+     usrId = data.get("senderId").toString();
+     Message m = new Message(id, text, createdAt, new User(usrId, name, avatar));
+     adapter.addToStart(m, true);
+     adapter.notifyDataSetChanged();
+  }
+ }
+}
+);
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการสืบค้นประวัติการสนทนาของคลาส ChatActivity}
+		\label{Fig:ChatActivity2}
+	\end{figure}
+	จากภาพที่ \ref{Fig:ChatActivity2} โค๊ดส่วนที่ใช้ในการสืบค้นประวัติการสนทนาของคลาส ChatActivity สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-2 ทำการสืบค้นข้อมูลประวัติการสนทนาจาก Cloud Firestore 
+		\item บรรทัดที่ 11-14 สร้างตัวแปรเพื่อใช้ในการจัดเก็บข้อมูล
+		\item บรรทัดที่ 16-24 ทำการอ่านค่าและเพิ่มเข้าลิสต์รายการ
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+final Map<String, Object> map = new HashMap<>();
+map.put("message", tvMessage.getText().toString());
+map.put("time", new Date());
+map.put("senderId", currentUser.getUid());
+map.put("name", currentUser.getDisplayName());
+map.put("photo", currentUser.getPhotoUrl().toString());
+tvMessage.setText("");
+db.collection("Chats").document(senderId)
+.collection("messages")
+.add(map)
+.addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+ @Override
+ public void onComplete(@NonNull Task<DocumentReference> task) {
+    Map<String, Object> map1 = new HashMap<>(); 
+    map1.put("lastChat", new Date());
+    db.collection("Users")
+    .document(senderId)
+    .update(map1);
+  }
+ }
+);
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการส่งข้อความของคลาส ChatActivity}
+		\label{Fig:ChatActivity3}
+	\end{figure}
+	จากภาพที่ \ref{Fig:ChatActivity3} โค๊ดส่วนที่ใช้ในการส่งข้อความของคลาส ChatActivity สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-6 สร้าง HashMap เพื่อใช้จัดเก็บข้อความ
+		\item บรรทัดที่ 8-11 เป็นการเพิ่มชุดข้อมูลเข้าสู่ Cloud Firestore
+		\item บรรทัดที่ 14-18 เป็นการอัพเดทเวลาสนทนาล่าสุดของผู้ใช้
+	\end{itemize}
+	
+	\subsection{โครงสร้างของการสร้างหน้า SignInActivity}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+private FirebaseAuth mAuth;
+private  String email, password;
+private EditText userName, userPassword;
+private ProgressBar simpleProgressBar;
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการแสดงผลหน้าเข้าสู่ระบบของคลาส SignInActivity}
+		\label{Fig:SignInActivity}
+	\end{figure}
+	จากภาพที่ \ref{Fig:SignInActivity} โค๊ดส่วนที่ใช้ในการแสดงผลหน้าเข้าสู่ระบบของคลาส SignInActivity สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1 ตัวแปร mAuth ใช้ในการจัดเก็บสถานะการเข้าสู่ระบบของผู้ใช้
+		\item บรรทัดที่ 2 ตัวแปร email จัดเก็บอีเมลของผู้ใช้
+		\item บรรทัดที่ 2 ตัวแปร password จัดเก็บรหัสผ่านของผู้ใช้
+		\item บรรทัดที่ 3 ตัวแปร userName ใช้ในการรับค่าอีเมลจากผู้ใช้
+		\item บรรทัดที่ 3 ตัวแปร userPassword ใช้ในการรับค่ารหัสผ่านจากผู้ใช้   
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+ email = userName.getText().toString();
+ password = userPassword.getText().toString();
+ if(email.isEmpty() || email == null || password.isEmpty() || password == null ){
+   Toast.makeText(SignInActivity.this, "Please fill data!", Toast.LENGTH_SHORT).show();
+   return;
+ }
+ simpleProgressBar.setVisibility(View.VISIBLE);
+ mAuth.signInWithEmailAndPassword(email, password)
+ .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+  @Override
+  public void onComplete(@NonNull Task<AuthResult> task) {
+    if (task.isSuccessful()) {
+      startActivity(new Intent(SignInActivity.this,MainActivity.class));
+      finish();
+    } else {
+      Toast.makeText(SignInActivity.this, "Authentication failed.",
+      Toast.LENGTH_SHORT).show();
+    }
+    simpleProgressBar.setVisibility(View.INVISIBLE);
+   }
+  }
+ );
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการเข้าสู่ระบบของคลาส SignInActivity}
+		\label{Fig:SignInActivity2}
+	\end{figure}
+	จากภาพที่ \ref{Fig:SignInActivity2} โค๊ดส่วนที่ใช้ในการเข้าสู่ระบบของคลาส SignInActivity สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1 ตัวแปร email จัดเก็บอีเมลของผู้ใช้
+		\item บรรทัดที่ 2 ตัวแปร password จัดเก็บรหัสผ่านของผู้ใช้
+		\item บรรทัดที่ 3 ตรวจสอบความถูกต้องของข้อมูล
+		\item บรรทัดที่ 8-21 เป็นการเรียกใช้ไฟร์เบส Authentication เพื่อเข้าใช้งานระบบ   
+	\end{itemize}
+	
+	\subsection{โครงสร้างของการสร้างหน้า ScheduleFragment}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+private RecyclerView recyclerView;
+private FirebaseFirestore db;
+private ArrayList<Event> events;
+private EventItemAdapter adapter;
+private DatePickerTimeline datePicker;
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการแสดงผลหน้าปฏิทินของคลาส ScheduleFragment}
+		\label{Fig:ScheduleFragment}
+	\end{figure}
+	จากภาพที่ \ref{Fig:ScheduleFragment} โค๊ดส่วนที่ใช้ในการแสดงผลหน้าปฏิทินของคลาส ScheduleFragment สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1 ตัวแปร recyclerView ใช้ในการแสดงลิสต์รายการกำหนดการ
+	    \item บรรทัดที่ 2 ตัวแปร db ใช้ในการสืบค้นช้อมูลจาก Cloud Firestore
+		\item บรรทัดที่ 3 ตัวแปร events จัดเก็บข้อมูลกำหนดการ
+		\item บรรทัดที่ 4 ตัวแปร adapter ใช้ในการแปลงชุดข้อมูลกำหนดการเป็นลิสต์รายการเพื่อใช้แสดงใน recyclerView
+		\item บรรทัดที่ 5 ตัวแปร datePicker ใช้ในการแสดงปฏิทิน   
+	\end{itemize}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+db.collection("Events")
+.orderBy(getString(R.string.key_time), Query.Direction.DESCENDING)
+.get()
+.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+ @Override
+ public void onComplete(@NonNull Task<QuerySnapshot> task) {
+    if (task.isSuccessful() && isAdded()) {
+      for (DocumentSnapshot document : task.getResult()) {
+        Log.d(TAG, document.getId() + " => " + document.getData());
+        Map<String, Object> data = document.getData();
+        Date dbDate = (Date) data.get(getString(R.string.key_time));
+        if (dbDate.getDate() == datePicker.getSelectedDay() && dbDate.getMonth() == datePicker.getSelectedMonth()) {
+           Event event = new Event();
+           event.setTitle(data.get(getString(R.string.key_title)).toString());
+           event.setDescription(data.get(getString(R.string.key_description)).toString());
+           event.setTime((Date) data.get(getString(R.string.key_time)));
+           events.add(event);
+       }
+    }
+  recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+  recyclerView.setAdapter(adapter);
+  adapter.notifyDataSetChanged();
+    } else {
+      Log.w(TAG, "Error getting documents.", task.getException());
+    }
+  }
+ }
+);
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการสืบค้นข้อมูลกำหนดการของคลาส ScheduleFragment}
+		\label{Fig:ScheduleFragment2}
+	\end{figure}
+	จากภาพที่ \ref{Fig:ScheduleFragment2} โค๊ดส่วนที่ใช้ในการสืบค้นข้อมูลกำหนดการของคลาส ScheduleFragment สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1-4 เป็นการสืบค้นข้อมูลกำหนดการโดยเรียงลำดับข้อมูลล่าสุดก่อน
+		\item บรรทัดที่ 7-19 เป็นการนำข้อมูลที่ได้จากการสืบค้นแปลงเป็นลิสต์รายการและแสดงผล
+		\item บรรทัดที่ 20-22 เป็นการอัพเดทลิสต์รายการ
+	\end{itemize}
+	
+	\subsection{โครงสร้างของการสร้างหน้า ScheduleFragment}
+	\begin{figure}[H]
+		{\setstretch{1.0}\begin{lstlisting}
+private RecyclerView recyclerView;
+private FirebaseFirestore db;
+private ArrayList<Event> events;
+private EventItemAdapter adapter;
+private DatePickerTimeline datePicker;
+			\end{lstlisting}}
+		\caption{โค๊ดส่วนที่ใช้ในการแสดงผลหน้าปฏิทินของคลาส ScheduleFragment}
+		\label{Fig:ScheduleFragment}
+	\end{figure}
+	จากภาพที่ \ref{Fig:ScheduleFragment} โค๊ดส่วนที่ใช้ในการแสดงผลหน้าปฏิทินของคลาส ScheduleFragment สามารถอธิบายได้ดังนี้
+	\begin{itemize}[label={--}]
+		\item บรรทัดที่ 1 ตัวแปร recyclerView ใช้ในการแสดงลิสต์รายการกำหนดการ
+		\item บรรทัดที่ 2 ตัวแปร db ใช้ในการสืบค้นช้อมูลจาก Cloud Firestore
+		\item บรรทัดที่ 3 ตัวแปร events จัดเก็บข้อมูลกำหนดการ
+		\item บรรทัดที่ 4 ตัวแปร adapter ใช้ในการแปลงชุดข้อมูลกำหนดการเป็นลิสต์รายการเพื่อใช้แสดงใน recyclerView
+		\item บรรทัดที่ 5 ตัวแปร datePicker ใช้ในการแสดงปฏิทิน   
+	\end{itemize}

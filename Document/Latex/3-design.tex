@@ -1,0 +1,783 @@
+\chapter{การวิเคราะห์และออกแบบระบบ}
+
+การวิเคราะห์และออกแบบระบบก่อนดำเนินการจริงเป็นอีกหนึ่งขั้นตอนที่มีความสำคัญมาก เพราะการวิเคราะห์และออกแบบระบบนั้นเป็นการกระทำที่ทำให้ผู้พัฒนาเห็นรายละเอียดส่วนย่อยของงานทั้งหมด เพิ่มประสิทธิภาพในการวางแผน การทำงาน และยังช่วยลดปัญหาที่อาจจะเกิดขึ้นในระหว่างพัฒนา เพื่อให้ระบบมีความสมบูรณ์มากยิ่งขึ้น เนื่องจากการวิเคราะห์และออกแบบระบบนั้นจะช่วยให้ให้บริการ จัดการทรัพยากรได้อย่างคุ้มค่าและตรงตามความต้องการของระบบ
+
+การวิเคราะห์และออกแบบระบบสแกนใบหน้าสำหรับเเคชเชียร์ ในบทนี้จะแบ่งออกเป็น 6 ข้นตอนเพื่อให้เห็นการดำเนินงานอย่างมีระบบ ในหัวข้อแรกจะนำเสนอภาพรวมของระบบ ก่อนจะนำเสนอเอกสารแสดงความต้องการของระบบซึ่งจะทำให้เห็นที่มาของเพจต่าง ๆ ในขั้นตอนของการออกแบบในหัวข้อที่สาม ส่วนหัวข้อที่เหลือจะแสดงแผนภาพการการทำงานของระบบโดยใช้ UML diagram ซึ่งประกอบไปด้วย Use Case, Class และ Sequence Diagram เพื่อแสดงรายละเอียดของระบบก่อนนำไปเขียนคำสั่งด้วยภาษาโปรแกรมในบทต่อไป
+
+\begin{enumerate}[label=3.\arabic*]
+	\item โครงสร้างภาพรวมของระบบ (System Architecture) เป็นการออกแบบภาพรวมและเทคโนโลยีของระบบ	
+	\item System Requirements คือ ความต้องการหรือสิ่งที่ระบบควรจะทำ หรือหน้าที่หลักของ
+	ระบบที่จะต้องทำ
+	\item User Interface Design เป็นการออกแบบส่วนต่อประสานกับผู้ใช้
+	\item Use Case Diagram เป็นแผนภาพที่ใช้แสดงให้ทราบว่าระบบทำงานหรือมีหน้าที่ใดบ้าง
+	\item Class Diagram เป็นแผนภาพที่ใช้แสดง Class และความสัมพันธ์ระหว่าง Class
+	\item Sequence Diagram เป็นแผนภาพที่ใช้แสดงให้เห็นถึงการตอบโต้ข้อมูลระหว่างคลาส เรียงตามลำดับของเวลาที่เกิดเหตุการณ์จากน้อยไปมาก
+\end{enumerate}	
+
+\section{โครงสร้างภาพรวมของระบบ}
+    ความหมายของ System Architecture  หมายถึง กรอบโครงสร้างของระบบที่อธิบายความสัมพันธ์ขององค์ประกอบต่าง ๆ ไปจนถึงขั้นการเชื่อมต่อกันของระบบย่อยต่าง ๆ โดยจัดกลุ่มองค์ประกอบไว้ในหลาย ๆ ลักษณะเพื่อให้ผู้เกี่ยวข้อง (Stakeholder) จากพื้นฐานสาขาอาชีพที่แตกต่าง กันสามารถทำความเข้าใจได้ง่าย เช่น การจัดแบ่งองค์ประกอบตามลักษณะการทำงานของระบบ (functional components) เป็นต้น
+    
+    การออกแบบ System architecture แสดงภาพรวมและเทคโนโลยีของระบบสแกนใบหน้าสำหรับเเคชเชียร์ มีรายละเอียดดังรูปที่ \ref{Fig:system}
+   
+  \begin{figure}[H]
+  	\includegraphics[width=\columnwidth]{Figures/chapter3/system}
+  	\caption{ภาพรวมและโครงสร้างการทำงานของระบบ}
+  	\label{Fig:system} 
+  \end{figure}
+   
+   จากรูปที่ \ref{Fig:system}เมื่อพนักงานเเคชเชียร์ทำการล็อกอินเเล้วจะเข้าหน้าหลัก ยังไม่เป็นสมาชิกจะทำการสมัครก่อน ถ้าเป็นสมาชิกเเล้วจะเข้าสู่สู่ระบบสแกนใบหน้าสำหรับลูกค้า โดยระบบจะทำการตรวจสอบรูปภาพที่สแกนว่าตรงกับรูปภาพของในระบบ แล้วเเสดงจ้อมูลของลูกค้าให้กับพนักงานเเคชเชียร์แล้วยังหน้าสั่งสินค้า หรือต้องการใช้ระบบเเนะนำเมนูแก่ลูค้าระบบจะทำการดึงข้อมูลไปให้โมเดลทำนาย เเล้วจะเเสดงเมนูที่จะเเนะนำให้ลูกค้าเเล้วทำการสั่งสินค้า
+  
+
+\section{System Requirements}
+\subsection{Functional Requirements}
+	ระบบสแกนใบหน้าสำหรับเเคชเชียร์ แบ่งความสามารถของระบบตามประเภทของผู้ใช้งานดังนี้
+	\begin{enumerate}
+		\item พนักงานเเคชเชียร์
+			\begin{itemize}[label={--}]
+				\item สามารถทำการเข้าสู่ระบบได้
+				\item สแกนใบหน้าของลูกค้าได้
+				\item สมัครสมาชิกให้ลูกค้าได้
+				\item แก้ไขข้อมูลลูกค้าเมื่อลูกค้าต้องการได้
+				\item สามารถเเนะนำเมนูเเก่ลูกค้าได้
+				\item สามารถสั่งสินค้าให้ลูกค้าได้
+				
+			\end{itemize}
+		\item ลูกค้า
+			\begin{itemize}[label={--}]
+				\item สแกนใบหน้าเพื่อทำการเเสดงข้อมูล
+				\item สั่งสินค้ากับพนักงาน
+			
+			\end{itemize}
+	\end{enumerate}
+
+\subsection{Non-functional Requirements}
+		\begin{enumerate}
+		\item เว็บแอปพลิเคชัน
+		\begin{itemize}[label={--}]
+			\item ใช้โปรโตคอล (Protocol) แบบ HTTPS (Hypertext Transfer Protocol Secure)  ในการสื่อสารที่ช่วยรักษาความสมบูรณ์ถูกต้องของข้อมูลผู้ใช้และเก็บข้อมูลไว้เป็นความลับระหว่างคอมพิวเตอร์ของผู้ใช้กับเว็บไซต์ 
+			\item ใช้ดีลิบ (dlib)ซึ่งมี Machine learning algorithms  ในการจดจำหน้าของลูกค้าเพือระบุตัวตน
+			\item  ใช้ต้นไม้ตัดสินใจ (Decision Trees)
+			ในการทำโมเดล(Model) ในการทำระบบเเนะนำเมนู
+	\end{enumerate}
+	
+\section{User Interface Design}
+ในการออกแบบ User Interface Design ของระบบสแกนใบหน้าสำหรับเเคชเชียร์
+	
+			\begin{itemize}
+				
+					\item  การออกแบบหน้าจอเข้าสู่ระบบ
+				\begin{figure}[H]
+					\centering
+					\includegraphics[width=0.8\textwidth]{Figures/3/UIWeb/login}
+					\caption{หน้าเข้าสู่ระบบสำหรับพนักงาน}
+					\label{Fig:login}
+				\end{figure}
+				จากภาพที่ \ref{Fig:login}  แสดงหน้าจอการเข้าสู่ระบบของพนักงานเเคชเชียร์ จำเป็นต้องกรอกข้อมูรหัสพนักงานและรหัสผ่านเพื่อเข้าใช้งานระบบ
+				\en
+				\item การออกแบบหน้าจอหลัก
+				\begin{figure}[H]
+					\centering
+					\includegraphics[width=0.8\textwidth]{Figures/3/UIWeb/Homepage}
+					\caption{หน้าจอหลัก}
+					\label{Fig:Homepage}
+				\end{figure}
+				จากภาพที่ \ref{Fig:Homepage}แสดงหน้าจอหลัก ให้พนักงานเลือก
+				ไหยังหน้า สมัครสมาชิก เข้าสู่ระบบโดยการสแกนใบหน้า ดขเาสู่ระบบโดยล็อกอินผ่านเบอร์โทรศัพท์ 
+				
+				\begin{figure}[H]
+					\centering
+					\includegraphics[width=0.8\textwidth]{Figures/3/UIWeb/Doc}
+					\caption{หน้าจเเสดงข้อมูลลูกค้า}
+					\label{Fig:Doc}
+				\end{figure}
+				จากภาพที่ \ref{Fig:Doc}  แสดงหน้าจอ ข้อมูลลูกค้า หลังจากที่ผ่านการสแกนใบหน้า จะเเสดงข้อมูลลูกค้าที่สมัครสมาชิก เเสดงประวัติการสั่งซื้อสินค้า แต้มสะสม เเละมีการกนะนำเมนูแก่ลูกค้า ทั้งนี้จะเเสดงเฉพาะลูกค้าที่เป็นสมาชิกเท่านั้น
+				\item การออกเเบบหน้าจอสั่งซื้อสินค้า
+				\begin{figure}[H]
+					\centering
+					\includegraphics[width=0.8\textwidth]{Figures/3/UIWeb/Login}
+					\caption{หน้าจอสั่งซื้อสินค้า}
+					\label{Fig:Login}
+				\end{figure}
+				จากภาพที่ \ref{Fig:Login} แสดงหน้าจอรายการเมนูที่มีในร้าน โดยจะมีอยู่3ประเภทหลัก คือ เมนูร้อน เมนูเย็น เมนูปั่น เมื่อลูกค้าสั่งจะมีการเเสดงรายการที่สั่ง ราคา จำนวนที่ลูกค้าสั่ง
+			\end{itemize}
+	\newpage
+
+\section{Use Case Diagram}
+Use Case Diagram เป็นแผนผังเพื่อแสดงฟังก์ชันแสดงการทำงานของระบบโดยรวม แสดงส่วนประกอบในระบบและกิจกรรมที่เกิดขึ้นในระบบ สัญลักษณ์ที่ใช้ในการเขียน Use Case Diagram แสดงในตารางที่ \ref{tab:use-case2}
+\begin{table}[H]
+	\caption{สัญลักษณ์ของ Use case Diagram}
+	\label{tab:use-case2}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\textbf{สัญลักษณ์} & \multicolumn{1}{c|}{\textbf{การใช้งาน}} \\ \hline
+		\raisebox{-\totalheight}{Use case}
+		& \setstretch{1.5} {Use case คือส่วนย่อยของระบบงาน แทนด้วยวงรีและชื่อของ Use case ภายในวงรี} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[height=1.5cm]{Figures/table/use-case/2}}
+		& \setstretch{1.5} {Actor คือบุคคลหรือระบบงานอื่นที่ใช้งานระบบหรือได้รับประโยชน์จากระบบซึ่งอยู่ภายนอกระบบ แทนด้วยรูปคนและมีชื่อบทบาทการใช้งานระบบ} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=3cm]{Figures/table/use-case/3}}
+		& \setstretch{1.5} {เส้นตรงที่แสดงถึงการใช้งาน Use case ของผู้กระทำ} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/table/use-case/4}}
+		& \setstretch{1.5} {กรอบสี่เหลี่ยมแสดงถึงขอบเขตของระบบโดยแสดงชื่อระบบภายในหรือด้านบนกรอกสี่เหลี่ยม Use case อยู่ภายในกรอบสี่เหลี่ยม และ actor อยู่ภายนอกกรอบสี่เหลี่ยม} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/table/use-case/5}}
+		& \setstretch{1.5} {ความสัมพันธ์แบบ <<includes>> แสดงว่า Use case หนึ่งดำเนินการตามขั้นตอนของ Use case อื่น โดยแทนด้วยสัณลักษณ์ลูกศรเส้นประ ซึ่ง Use case ที่หางลูกศรเรียกใช้งาน Use case ที่หัวลูกศรทุกครั้งที่มีการทำงาน} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/table/use-case/6}}
+		& \setstretch{1.5} {ความสัมพันธ์แบบ <<extend>> แสดงว่า Use case หนึ่งดำเนินการตามขั้นตอนของ Use case อื่น โดยแทนด้วยสัญลักษณ์ลูกศรเส้นประ ซึ่ง Use case ที่หัวลูกศรเรียกใช้งาน Use case ที่หางลูกศร แต่การใช้งานไม่จำเป็นต้องเกิดขึ้นทุกครั้งขึ้นอยู่กับเงื่อนไขระหว่างการทำงาน} \\ \hline
+	\end{tabular}
+\end{table}
+
+
+	 \begin{figure}[H]
+		\includegraphics[width=\columnwidth]{Figures/3/usecase}
+		\caption{Use Case diagram ของระบบ สแกนใบหน้าสำหรับเเคชเชียร์}
+		\label{Fig:usecase} 
+	\end{figure}
+	
+	\begin{table}[H]
+		\centering
+		\caption{อธิบาย Use Case หน้าที่ของระบบ ในภาพที่ \ref{Fig:usecase}}
+		\label{tab:usecase}
+		\resizebox{\totalheight}{!}{\textwidth}{%
+			\begin{tabular}{|c|p{10cm}|}
+				\hline
+				\multicolumn{1}{|c|}{\textbf{Use Case}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		สมัครสมาชิก & พนักงานทำการสมัครสมาชิกแก่ลูกค้าที่ต้องการเป็นสมาชิกโดยผ่านการล็อกอินของพนักงานก่อน\\ \hline
+					สแกนใบหน้าลูกค้า & พนักงานสแกนใบหน้าลุกค้าที่เป็นสมั่าชิกในระบบโดยผ่านการล็อกอินก่อน \\ \hline
+				แสดงข้อมูลลูกค้า & แสดงข้องมูลลูกค้าที่เป็นสมาชิกในระบบ โดยต้องผ่านการสแกนใบหน้าก่อนหรือพนักงานที่้เป็นสมาชิก \\ \hline
+			แนะนำเมนู & แสดงเมนูที่จะเเนะนำแก่ลูกค้าที่เป็นสมาชิก \\ \hline
+				สั่งซื้อสินค้า & พนักงานสั่ั่งสินค้าตามที่ลูกค้าต้องการ โดยไม่่ต้องสมัครเป็นสมาชิกก็สามารสั่งซื้อสินค้าได้ \\ \hline
+			
+			\end{tabular}%
+		}
+	\end{table}
+	
+	% Please add the following required packages to your document preamble:
+	% \usepackage{graphicx}
+	\begin{table}[H]
+		\centering
+		\caption{Use Caseสมัครสมาชิก}
+		\label{tab:usecase}
+		\resizebox{\totalheight}{!}{\textwidth}{%
+			\begin{tabular}{|p{10cm}|p{10cm}|}
+				\hline
+				\multicolumn{1}{|c|}{\textbf{Use Case Title : สมัครสมาชิก}} & \multicolumn{1}{c|}{\textbf{Use case Id : 1 }} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Primary Actor : พนักงานเเคชเชียร์} \\ \hline
+			    \multicolumn{2}{|p{\linewidth}|}{Stakeholder Actor : ลูกค้า} \\ \hline
+			    \multicolumn{2}{|p{\linewidth}|}{Main Flow : พนักงานเเคชเชียร์สมัครสาชิกให้ลูกค้าที่ต้องการเป็นสมาชิก โดยพนักงานเเคชเชียร์ต้องผ่านการล็อกอิน} \\ \hline
+			    \multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 1 : หากผู้ใช้งานไม่ได้เชื่อมต่ออินเตอร์เน็ตจะไม่สามารถสมัครสมาชิกให้แก่ลูกค้าได้} \\ \hline
+			   	\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 2 : พนักงานเเคชเชียร์จะไม่สามารถสมัครสมาชิกให้แก่ลูค้าได้ถ้าไม่ทำการล็อกอินก่อน} \\ \hline
+			\end{tabular}%
+		}
+	\end{table}
+	\begin{table}[H]
+		\centering
+		\caption{Use Case สแกนใบหน้าลูกค้า}
+		\label{tab:usecase}
+		\resizebox{\totalheight}{!}{\columnwidth}{%
+			\begin{tabular}{|p{7cm}|p{7cm}|}
+				\hline
+				\multicolumn{1}{|c|}{\textbf{Use Case Title : สแกนใบหน้าลูกค้า}} & \textbf{Use case Id : 2 } \\ \hline
+				\multicolumn{2}{|l|}{Primary Actor : พนักงานเเคชเชียร์} \\ \hline
+				\multicolumn{2}{|l|}{Stakeholder Actor : ลูกค้า} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Main Flow : พนักงานเเคชเชียร์ทำการสแกนหน้าลูกค้าที่เป็นสมาชิกเเล้ว โดยพนักงานจะต้องผ่านล็อกอินเข้าสู่ระบบก่อน} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 1 : หากผู้ใช้ไม่เชื่อมต่ออินเทอร์เน็ต จะไม่สามารถสแกนใบหน้าลูกค้าได้} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 2 : พนักงานเเคชเชียร์จะไม่สามารถสแกนใบหน้าลูกค้าได้ ถ้าไม่่ทำก่ีารล็อกอินเข้าสู่ระบบ} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 3 : พนักงานเเคชเชียร์จะไม่สามารถสแกนใบหน้าลูกค้าได้ ถ้าไม่สมัครสมาชิกแก่ลูกค้า} \\ \hline
+			\end{tabular}%
+		}
+	\end{table}
+
+	\begin{table}[H]
+		\centering
+		\caption{Use Case แสดงข้อมูลลูกค้า}
+		\label{tab:usecase}
+		\resizebox{\totalheight}{!}{\textwidth}{%
+			\begin{tabular}{|p{7cm}|p{7cm}|}
+				\hline
+				\multicolumn{1}{|c|}{\textbf{Use Case Title : แสดงข้อมูลลูกค้า}} & \textbf{Use case Id : 3 } \\ \hline
+				\multicolumn{2}{|l|}{Primary Actor : พนักงานเเคชเชียร์} \\ \hline
+				\multicolumn{2}{|l|}{Stakeholder Actor : ลูกค้า} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Main Flow : ระบบจะเเสดงข้อมูลลุกค้าที่เป็นสมัครสมาชิก โดยผ่านการสเเกนใบหน้า} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 1 : หากผู้ใช้ไม่เชื่อมต่ออินเทอร์เน็ต จะไม่สามารถสเเกนใบหน้าลูกค้าได้} \\ \hline
+				\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 2 :  ระบบจะไม่สามารถเเสดงข้อมูลลูกค้าได้ถ้าไม่ผ่านการสแกนใบหน้า}\\ \hline
+			
+			\end{tabular}%
+		}
+		\end{table}
+		
+		\begin{table}[H]
+			\centering
+			\caption{Use Case เเนะนำเมนู}
+			\label{tab:usecase}
+			\resizebox{\totalheight}{!}{\textwidth}{%
+				\begin{tabular}{|p{10cm}|p{10cm}|}
+					\hline
+					\multicolumn{1}{|c|}{\textbf{Use Case Title : เเนะนำเมนู}} & \multicolumn{1}{c|}{\textbf{Use case Id : 4 }} \\ \hline
+					\multicolumn{2}{|l|}{Primary Actor :พนักงานเเคชเชียร์} \\ \hline
+					\multicolumn{2}{|l|}{Stakeholder Actor : ลูกค้า} \\ \hline
+					\multicolumn{2}{|p{\linewidth}|}{Main Flow : จะเเสดงเมนูที่จะเเนะนำแก่ลูกค้า } \\ \hline
+					\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 1 : หากผู้ใช้ไม่เชื่อมต่ออินเทอร์เน็ต จะไม่สามารเเสดงเมนูที่จะเเนะนำลูกค้าได้} \\ \hline
+					\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 2 : ถ้าลูกค้าไม่เป็นสมาชิกจะไม่สามารถเเนะนำเมนูให้ลูกค้าได้} \\ \hline
+				\end{tabular}%
+			}
+		\end{table}
+		
+		\begin{table}[H]
+			\centering
+			\caption{Use Case สั่งซื้อสินค้า}
+			\label{tab:usecase}
+			\resizebox{\totalheight}{!}{\textwidth}{%
+				\begin{tabular}{|c|p{10cm}|}
+					\hline
+					\multicolumn{1}{|c|}{\textbf{Use Case Title : สม}} & \multicolumn{1}{c|}{\textbf{Use case Id : 5 }} \\ \hline
+					\multicolumn{2}{|l|}{Primary Actor : พนักงานเเคชเชียร์} \\ \hline
+					\multicolumn{2}{|l|}{Stakeholder Actor : ลูกค้า} \\ \hline
+					\multicolumn{2}{|p{\linewidth}|}{Main Flow เมื่อพนักงานเเคชเชียร์เข้าสู่ระบบแล้ว จะทำการสั่งสินค้าให้ ลูกค้าจะเป็นสมาชิก หรือไม่เป็นสมาชิก } \\ \hline
+					\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 1 : หากผู้ใช้ไม่เชื่อมต่ออินเทอร์เน็ต จะไม่สามาถสั่งสินค้าให้ลูกค้าได้} \\ \hline
+					\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 2 : พนักงานเเคชเชียร์จะไม่สามารถสั่งสินค้าให้ลูกค้าได้ถ้าไม่ล็อกอินเข้าสู่ระบบ} \\ \hline
+				\end{tabular}%
+			}
+		\end{table}
+	
+	
+%		\begin{table}[H]
+%			\centering
+%			\caption{Use Case สมัครสมาชิก}
+%			\label{tab:usecase}
+%			\resizebox{\totalheight}{!}{\textwidth}{%
+%				\begin{tabular}{|c|p{10cm}|}
+%					\hline
+%					\multicolumn{1}{|c|}{\textbf{Use Case Title : สมัครสมาชิก}} & \multicolumn{1}{c|}{\textbf{Use case Id : 8 }} \\ \hline
+%					\multicolumn{2}{|l|}{Primary Actor : นักศึกษา} \\ \hline
+%					\multicolumn{2}{|l|}{Stakeholder Actor : -} \\ \hline
+%					\multicolumn{2}{|p{\linewidth}|}{Main Flow : เมื่อนักศึกษาต้องการใช้งานระบบทั้งหมดของกองทุนจำเป็นต้องเข้าสู่ระบบก่อน หากยังไม่มีบัญชีสามารถสมัครได้โดยต้องกรอกข้อมูลอีเมลและรหัสผ่าน} \\ \hline
+%					\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 1 : หากผู้ใช้ไม่เชื่อมต่ออินเทอร์เน็ต จะไม่สามารถสมัครสมาชิกได้} \\ \hline
+%				\end{tabular}%
+%			}
+%		\end{table}	
+%		 \begin{table}[H]
+%		 	\centering
+%		 	\caption{Use Case เข้าสู่ระบบ}
+%		 	\label{tab:usecase}
+%		 	\resizebox{\totalheight}{!}{\textwidth}{%
+%		 		\begin{tabular}{|c|p{10cm}|}
+%		 			\hline
+%		 			\multicolumn{1}{|c|}{\textbf{Use Case Title : เข้าสู่ระบบ}} & \multicolumn{1}{c|}{\textbf{Use case Id : 9 }} \\ \hline
+%		 			\multicolumn{2}{|l|}{Primary Actor : นักศึกษา} \\ \hline
+%		 			\multicolumn{2}{|l|}{Stakeholder Actor : -} \\ \hline
+%		 			\multicolumn{2}{|p{\linewidth}|}{Main Flow : เมื่อนักศึกษาต้องการใช้งานระบบทั้งหมดของกองทุนจำเป็นต้องเข้าสู่ระบบก่อนโดยต้องกรอกข้อมูลอีเมลและรหัสผ่าน} \\ \hline
+%		 			\multicolumn{2}{|p{\linewidth}|}{Exceptional Flow ที่ 1 : หากผู้ใช้ไม่เชื่อมต่ออินเทอร์เน็ต จะไม่สามารถเข้าสู่ระบบได้} \\ \hline
+%		 		\end{tabular}%
+%		 	}
+%		 \end{table}	
+		 
+\newpage
+
+\section{Class Diagram}
+	Class Diagram คือแผนภาพที่ใช้แสดงคลาสและความสัมพันธ์ในแบบต่างๆ ระหว่างคลาส สัญลักษณ์ที่ใช้ในการเขียน Class Diagram แสดงในตารางที่ \ref{tab:class2} 
+	\begin{center}
+	\begin{table}[H]
+		\centering
+		\caption{สัญลักษณ์ของ Class Diagram}
+		\label{tab:class2}
+		\begin{tabular}{|c|p{10cm}|}
+			\hline
+			\textbf{สัญลักษณ์} & \multicolumn{1}{c|}{\textbf{การใช้งาน}} \\ \hline
+			\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/table/class/11}}
+			& \setstretch{1.5} {คลาส สัญลักษณ์แทนด้วยสี่เหลี่ยมแบ่งเป็น 3 ส่วน 
+				ส่วนบน เป็นชื่อของ class ส่วนกลาง เป็นชื่อ Attribute และส่วนล่างเป็น Operation Name หรือ Method ใช้สำหรับเขียนฟังก์ชันในการทำงานของคลาสนั้น ๆ
+				ชนิดของ Visibility ของ Method และ Attribute
+				แบ่งเป็น 3 ชนิด ได้แก่
+				\begin{enumerate}
+					\item Public แทนสัญลักษณ์ด้วยเครื่องหมายบวก (+)
+					\item Private แทนสัญลักษณ์ด้วยเครื่องหมายลบ (-)
+					\item Protected แทนสัญลักษณ์ด้วยเครื่องหมายชาร์ป (#)
+				\end{enumerate}
+			} \\ \hline
+			\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/table/class/1}}
+			& \setstretch{1.5} {Dependency Relationship หมายความว่า คลาสที่อยู่ฝั่งต้นลูกศรสามารถเรียกใช้คลาสที่อยู่ฝั่งหัวลูกศร}
+			\\ \hline
+			\raisebox{-\totalheight}{\includegraphics[width=0.35\textwidth]{Figures/3/Class/aggre}}
+			& \setstretch{1.5} {Composition Relationship เป็นความสัมพันธ์ระหว่างออบเจ็กต์หรือคลาสแบบขึ้นต่อกันและมีความเกี่ยวข้องกันเสมอ} \\ \hline
+			\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/3/Class/implement}}
+			& \setstretch{1.5} {Realization Relationship เป็นความสัมพันธ์ระหว่าง Object หรือ Class ในลักษณะของการสืบทอดคุณสมบัติจาก Class หนึ่ง (Super class) ไปยังอีก Class หนึ่ง (Subclass)} \\ \hline
+			\raisebox{-\totalheight}{\includegraphics[width=50,height=50]{Figures/table/class/connector}}
+			& \setstretch{1.5} {Connector เป็นสัญลักษณ์แทนด้วยรูปห้าเหลี่ยมและมีชื่ออยู่ตรงกลาง จะสร้างสัญลักษณ์นี้ไว้เมื่อต้องการเชื่อมต่อคลาสที่อยู่คนละหน้า} \\ \hline
+		\end{tabular}
+	\end{table}
+	\end{center}
+
+\newpage
+  %IMAGE of class
+	Class Diagram แสดงความสัมพันธ์ในรูปแบบต่างๆ ระหว่างคลาสขอระบบสแกนใบหน้าสำหรับเเคชเชียร์ อธิบายได้ตามภาพที่ \ref{Fig:MainActivity20C} ดังต่อไปนี้
+	\begin{figure}[H]
+		\includegraphics[width=1.0\columnwidth]{Figures/3/Class/MainActivity}
+		\caption{Class Diagram ของแอปพลิเคชันระบบสแกนใบหน้าสำหรับเเคชเชียร์}
+		\label{Fig:MainActivity20C}
+	\end{figure}
+	\begin{figure}[H]
+		\includegraphics[width=1.0\columnwidth]{Figures/3/Class/Feed}
+		\caption{Class Diagram ของแอปพลิเคชันระบบ XX}
+		\label{Fig:FeedC}
+	\end{figure}
+\begin{sidewaysfigure}
+	\begin{figure}[H]
+		\includegraphics[width=1.0\columnwidth]{Figures/3/Class/Doc}
+		\caption{Class Diagram ของแอปพลิเคชันระบบ XX}
+		\label{Fig:DocC}
+	\end{figure}
+\end{sidewaysfigure}
+	\begin{figure}[H]
+		\includegraphics[width=\columnwidth]{Figures/3/Class/Submit}
+		\caption{Class Diagram ของแอปพลิเคชันระบบ XX}
+		\label{Fig:SubmitC}
+	\end{figure}
+	\begin{figure}[H]
+		\includegraphics[width=1.0\columnwidth]{Figures/3/Class/UserChat}
+		\caption{Class Diagram ของแอปพลิเคชันระบบ XX}
+		\label{Fig:UserChatC}
+	\end{figure}
+
+	% TABLE of class
+\newpage	
+	จากรูปภาพที่ \ref{Fig:MainActivity20C} สามารถอธิบายแผนภาพ Class Diagram ได้ดังนี้
+	\begin{table}[H]
+		\centering
+		\caption{อธิบาย Class Diagram ของคลาสพื้นฐานของระบบ}
+		\label{tab:class}
+		\begin{tabular}{|c|p{10cm}|}
+			\hline
+			\textbf{Class Diagram} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+			\raisebox{-\totalheight}{MainApplication}
+			& \setstretch{1.5} {คลาส MainApplication จะถูกเรียกใช้งานทุกครั้งเมื่อผู้ใช้เปิดแอปพลิเคชัน โดยวัตถุประสงค์การทำงานของคลาสนี้คือ เพื่อใช้จัดการทรัพยากรที่จำเป็นสำหรับการใช้งานในคลาสอื่น ๆ } \\ \hline
+			\raisebox{-\totalheight}{SplashScreenActivity}
+			& \setstretch{1.5} {คลาส SplashScreenActivity จะถูกเรียกใช้งานทุกครั้งเมื่อผู้ใช้เปิดแอปพลิเคชัน โดยวัตถุประสงค์การทำงานของคลาสคือ เพื่อใช้ตรวจสอบสถานะการเข้าสู่ระบบของผู้ใช้} \\ \hline
+			\raisebox{-\totalheight}{MainActivity}
+			& \setstretch{1.5} {คลาส MainActivity เป็นคลาสหลักที่ใช้ในการทำงานของแอปพลิเคชันโดยการทำงานของคลาสนี้เน้นไปที่การสร้าง Fragment เพื่อใช้แสดงข้อมูลต่าง ๆ โดยองค์ประกอบการทำงานของคลาสนี้ประกอบบไปด้วยสองส่วนหลักๆ ได้แก่ เมนูนำทาง Drawer และ Fragment Container} \\ \hline
+			\raisebox{-\totalheight}{SignInActivity}
+			& \setstretch{1.5} {คลาส SignInActivity เป็นคลาสที่ใช้เพื่อให้สมาชิกที่ได้ลงทะเบียนกับระบบเข้าสู่ระบบเพื่อใช้งานบริการต่าง ๆ จากระบบ} \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+จากรูปภาพที่ \ref{Fig:FeedC} สามารถอธิบายแผนภาพ Class Diagram ได้ดังนี้
+\begin{table}[H]
+	\centering
+	\caption{อธิบาย Class Diagram ของส่วนของการแสดงข่าวสาร}
+	\label{tab:class}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\textbf{Class Diagram} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		\raisebox{-\totalheight}{FeedFragment}
+		& \setstretch{1.5} {คลาส FeedFragment เป็นคลาสหลักที่ใช้ในการแสดงข้อมูลข่าวสาร มีการทำงานหลักคือสืบค้นฐานข้อมูลจากไฟร์เบสเพื่อนำมาแสดง} \\ \hline
+		\raisebox{-\totalheight}{FeedItemAdapter}
+		& \setstretch{1.5} {คลาส FeedItemAdapter เป็นคลาสที่มีหน้าที่ในการแปลงชุดข้อมูลที่ได้จากคลาส FeedFragment แล้วคืนค่ากลับเป็นลิสต์รายการของชุดข้อมูลนั้น ๆ} \\ \hline
+		\raisebox{-\totalheight}{Post}
+		& \setstretch{1.5} {คลาส Post เป็นคลาสโมเดลที่กำหนดค่าต่างๆที่จำเป็นสำหรับใช้ในการสร้างลิสต์รายการของคลาส FeedItemAdapter} \\ \hline
+		\raisebox{-\totalheight}{PostDetailActivity}
+		& \setstretch{1.5} {คลาส PostDetailActivity เป็นคลาสที่มีหน้าที่ในการแสดงข้อมูลรายละเอียดของข่าวสารแต่ละแถวที่ได้รับจากหน้า FeedFragment ที่จะส่งข้อมูลเมื่อผู้ใช้กดที่แถวรายการข่าวสาร} \\ \hline
+		\raisebox{-\totalheight}{RecyclerViewClickListener}
+		& \setstretch{1.5} {คลาส RecyclerViewClickListener เป็นคลาสอินเทอร์เฟส(Interface)ที่ใช้ในการสร้างแม่แบบเมื่อคลาสใด ๆ ต้องการใช้งานสำหรับการรับค่าเมื่อผู้ใช้กดแถวในลิสต์รายการ คลาสลูกที่ทำการสืบทอดคุณสมบัติจะสามารถรับข้อมูลตำแหน่งแถวที่ผู้ใช้กดบนลิสต์รายการได้} \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+จากรูปภาพที่ \ref{Fig:DocC} สามารถอธิบายแผนภาพ Class Diagram ได้ดังนี้
+\begin{table}[H]
+	\centering
+	\caption{อธิบาย Class Diagram ของส่วนของการแสดงรายการเอกสารในระบบ}
+	\label{tab:class}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\textbf{Class Diagram} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		\raisebox{-\totalheight}{DocumentsFragment}
+		& \setstretch{1.5} {คลาส DocumentsFragment เป็นคลาสที่ใช้ในการแสดงข้อมูลเอกสารที่ถูกอัพโหลดเข้าสู่ระบบโดยเจ้าหน้าที่ซึ่งจะถูกแสดงเป็นลิสต์รายการ} \\ \hline
+		\raisebox{-\totalheight}{DocItemAdapter}
+		& \setstretch{1.5} {คลาส DocItemAdapter เป็นคลาสที่มีหน้าที่ในการแปลงชุดข้อมูลที่ได้รับจากคลาส DocumentsFragment เป็นลิสต์รายการแล้วคืนกลับไปยังคลาส DocumentsFragment} \\ \hline
+		\raisebox{-\totalheight}{Doc}
+		& \setstretch{1.5} {คลาส Doc เป็นคลาสโมเดลที่กำหนดค่าต่าง ๆ ที่จำเป็นสำหรับใช้ในการสร้างลิสต์รายการของคลาส DocItemAdapter} \\ \hline
+		\raisebox{-\totalheight}{RecyclerViewClickListener}
+		& \setstretch{1.5} {คลาส RecyclerViewClickListener เป็นคลาสอินเทอร์เฟสที่ใช้ในการสร้างแม่แบบเมื่อคลาสใด ๆ ต้องการใช้งานสำหรับการรับค่าเมื่อผู้ใช้กดแถวในลิสต์รายการ คลาสลูกที่ทำการสืบทอดคุณสมบัติจะสามารถรับข้อมูลตำแหน่งแถวที่ผู้ใช้กดบนลิสต์รายการได้} \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+จากรูปภาพที่ \ref{Fig:SubmitC} สามารถอธิบายแผนภาพ Class Diagram ได้ดังนี้
+\begin{table}[H]
+	\centering
+	\caption{อธิบาย Class Diagram ของส่วนของการส่งสำเนาเอกสาร}
+	\label{tab:class}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\textbf{Class Diagram} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		\raisebox{-\totalheight}{SubmitFragment}
+		& \setstretch{1.5} {คลาส SubmitFragment เป็นคลาสที่ใช้ในการแสดงหน้าจอส่งสำเนาเอกสาร โดยมีการดำเนินการภายในคลาสหลัก ๆ ได้แก่ การถ่ายภาพ แปลงภาพและบันทึกภาพเข้าสู่ระบบ} \\ \hline
+	\end{tabular}
+\end{table}
+
+จากรูปภาพที่ \ref{Fig:UserChatC} สามารถอธิบายแผนภาพ Class Diagram ได้ดังนี้
+\begin{table}[H]
+	\centering
+	\caption{อธิบาย Class Diagram ของส่วนของการสนทนา}
+	\label{tab:class}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\textbf{Class Diagram} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		\raisebox{-\totalheight}{UserChatFragment}
+		& \setstretch{1.5} {คลาส UserChatFragment เป็นคลาสที่ใช้ในการแสดงหน้าจอสนทนาสำหรับนักศึกษา เพื่อติดต่อสอบถามข้อมูลกับเจ้าหน้าที่ มีการสืบค้นข้อมูลประวัติการสนทนาเพื่อส่งไปแปลงเป็นข้อมูลลิสต์รายการที่คลาส MessagesListAdapter} \\ \hline
+		\raisebox{-\totalheight}{MessagesListAdapter}
+		& \setstretch{1.5} {คลาส MessagesListAdapter เป็นคลาสที่ใช้ในการแปลงชุดข้อมูลที่ได้รับจากคลาส UserChatFragment เป็นลิสต์รายการแล้วทำการคืนค่าลิสต์รายการที่ได้กลับไปยังคลาส UserChatFragment} \\ \hline 
+		\raisebox{-\totalheight}{MessagesList}
+		& \setstretch{1.5} {คลาส MessagesList เป็นคลาสที่ใช้ในการจัดเก็บข้อมูลภายในคลาส UserChatFragment หลังจากที่ได้ทำการสืบค้นข้อมูลการสนทนาจากไฟร์เบสเพื่อส่งไปยังคลาส MessagesListAdapter} \\ \hline
+		\raisebox{-\totalheight}{RecyclerViewClickListener}
+		& \setstretch{1.5} {คลาส RecyclerViewClickListener เป็นคลาสอินเทอร์เฟสที่ใช้ในการสร้างแม่แบบเมื่อคลาสใด ๆ ต้องการใช้งานสำหรับการรับค่าเมื่อผู้ใช้กดแถวในลิสต์รายการ คลาสลูกที่ทำการสืบทอดคุณสมบัติจะสามารถรับข้อมูลตำแหน่งแถวที่ผู้ใช้กดบนลิสต์รายการได้} \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\section{Sequence Diagram}
+	Sequence Diagram เป็น Diagram ที่แสดงขั้นตอนการทำงานของแต่ละ Use Case ระหว่าง Object ต่างๆ ที่ส่งข้อความถึงกันและกัน โดย Sequence Diagram จะช่วยให้มองเห็นการทำงานของภาพรวมของระบบ ส่วนประกอบสัญลักษณ์ที่ใช้ในการเขียน Sequence Diagram 
+	แสดงดังตารางที่ \ref{tab:Sequences}
+	
+	\begin{table}[H]
+		\centering
+		\caption{สัญลักษณ์ของ Sequence Diagram}
+		\label{tab:Sequences}
+		\begin{tabular}{| c	| p{10cm} |}
+		\hline
+		\textbf{สัญลักษณ์} & \multicolumn{1}{c|}{\textbf{การใช้งาน}} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.17\textwidth]{Figures/table/Sequence/Sequence1}}
+		& \setstretch{1.5} {Class แสดงถึงการทำงานของ Use Case ในการส่งหรือรับข้อความ แทนด้วยสัญลักษณ์สี่เหลี่ยมมีชื่อคลาสอยู่ภายใน} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[height=0.08\textheight]{Figures/table/Sequence/Sequence2}}
+		& \setstretch{1.5} {Lifeline หรือเส้นอายุขัย แสดงช่วงเวลาตั้งแต่เริ่มสร้าง object ในคลาสนั้น จนกระทั่ง object นั้นถูกทำลาย สัญลักษณ์แทนด้วยเส้นประ} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[height=0.08\textheight]{Figures/table/Sequence/Sequence3}}
+		& \setstretch{1.5} {Focus of control หรือจุดควบคุม เป็นจุดควบคุมที่ object ใช้ทำการส่งหรือรับข้อความ สัญลักษณ์แทนด้วยสี่เหลี่ยม} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/table/Sequence/Sequence4}}
+		& \setstretch{1.5} {Message คือ ข้อความที่รับส่งระหว่าง Object สัญลักษณ์แทนด้วยลูกศรและประกอบด้วย 2 ส่วน คือ ข้อมูล (Data) และฟังก์ชัน (Function)} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.3\textwidth]{Figures/table/Sequence/Sequence5}}
+		& \setstretch{1.5} {Return Message เป็นข้อมูลที่ส่งกลับหลังจากทำงานเสร็จ} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[height=0.08\textheight]{Figures/3/selfcall}}
+		& \setstretch{1.5} {Self call เป็นการเรียกฟังชันก์การทำงานภายในตัวเอง} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[height=0.1\textheight,width=0.3\textwidth]{Figures/3/frame}}
+		& \setstretch{1.5} {สร้างกรอบการทำงานของโปรแกรม เพื่อให้รู้ขอบเขตของการทำงานเช่น ลูป(loop)} \\ \hline
+		\end{tabular}
+	\end{table}
+%
+%	Sequence Diagram ที่ใช้อธิบายการทำงานของระบบกองทุนเงินให้กู้ยืมเพื่อการศึกษา คณะวิทยสศาสตร์ มหาวิทยาลัยอุบลราชธานี มีรายละเอียดดังต่อไปนี้
+
+\newpage
+	\begin{landscape}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.95\columnwidth]
+		{Figures/3/Sequence/feed}
+		\caption{Sequence Diagram การแสดงข่าวสาร}
+		\label{Fig:Sequence-feed}
+	\end{figure}
+  \end{landscape}
+
+	จากภาพที่ \ref{Fig:Sequence-feed} สามารถอธิบายแผนภาพ Sequence Diagram แสดงข่าวสาร ได้ดังนี้ เมื่อ
+	ผู้ใช้เปิดโปรแกรมระบบจะเรียกใช้เมธอด onCreate() ที่คลาส MainActivity ระบบจะทำการสร้าง
+	Fragment ขึ้นมาโดยใช้เมธอด onCreate() ที่คลาส FeedFragment เมื่อ FeedFragment ถูกติดตั้งบน MainActivity เมธอด callData() จะสืบค้นข้อมูลจากฐานข้อมูลบน Firebase FireStore และส่งข้อมูลที่ได้ไปแปลงที่คลาส FeedItemAdapter โดยมีการคืนค่าเป็นข้อมูลข่าวสารแต่ละแถวและในขั้นตอนสุดท้ายคลาส FeedFragment จะทำการแสดงรายการข้อมูลข่าวสารทั้งหมดออกทางหน้าจอ หากผู้ใช้มีการกดเลือกข่าวสารบางแถวคลาส FeedFragment จะทำการเรียกใช้ PostDetailActivity เพื่อแสดงรายละเอียดข้อมูลข่าวสารของแถวที่ถูกเลือก
+	\begin{sidewaysfigure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\columnwidth]
+		{Figures/3/Sequence/calendar}
+		\caption{Sequence Diagram การแสดงปฏิทินกำหนดการ}
+		\label{Fig:Sequence-calendar}
+	\end{figure}
+	\end{sidewaysfigure}
+	\newpage
+	จากภาพที่ \ref{Fig:Sequence-calendar} สามารถอธิบายแผนภาพ Sequence Diagram แสดงปฏิทินกำหนดการ ได้ดังนี้ เมื่อ
+	ผู้ใช้เปิดโปรแกรมระบบจะเรียกใช้เมธอด onCreate() ที่คลาส MainActivity ระบบจะทำการสร้าง
+	Fragment ขึ้นมาโดยใช้เมธอด onCreate() ที่คลาส ScheduleFragment เมื่อ ScheduleFragment ถูกติดตั้งบน MainActivity เมธอด callData() จะสืบค้นข้อมูลกำหนดการของวันปัจจุบันจากฐานข้อมูลบน Firebase FireStore และส่งข้อมูลที่ได้ไปแปลงที่คลาส Schedule-ItemAdapter โดยมีการคืนค่าเป็นข้อมูลกำหนดการแต่ละแถวและในขั้นตอนสุดท้ายคลาส Schedule-Fragment จะทำการแสดงรายการกำหนดการวันปัจจุบันออกทางหน้าจอ หากผู้ใช้มีการกดเลือกวันที่ที่ต้องการทราบกำหนดการจากปฏิทินคลาส ScheduleFragment จะทำการเรียกใช้ callData() อีกครั้งโดยสืบค้นข้อมูลกำหนดการของวันที่ถูกเลือกจากฐานข้อมูลบน Firebase FireStore และส่งข้อมูลที่ได้ไปแปลงที่คลาส ScheduleItemAdapter โดยมีการคืนค่าเป็นข้อมูลแต่กำหนดการละแถวและในขั้นตอนสุดท้ายคลาส ScheduleFragment จะทำการแสดงรายการกำหนดการวันที่ผู้ใช้เลือกออกทางหน้าจอ
+
+	\begin{sidewaysfigure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\columnwidth]
+		{Figures/3/Sequence/doc}
+		\caption{Sequence Diagram การแสดงดาวน์โหลดเอกสาร}
+		\label{Fig:Sequence-doc}
+	\end{figure}
+	\end{sidewaysfigure}
+	\newpage
+	จากภาพที่ \ref{Fig:Sequence-doc} สามารถอธิบายแผนภาพ Sequence Diagram แสดงดาวน์โหลดเอกสาร ได้ดังนี้ เมื่อผู้ใช้เปิดโปรแกรมระบบจะเรียกใช้เมธอด onCreate() ที่คลาส MainActivity ระบบจะทำการสร้าง
+	Fragment ขึ้นมาโดยใช้เมธอด onCreate() ที่คลาส DocumentsFragment เมื่อ DocumentsFragment ถูกติดตั้งบน MainActivity เมธอด initInstances() จะสืบค้นข้อมูลเอกสารทั้งหมดจากฐานข้อมูลบน Firebase FireStore และส่งข้อมูลที่ได้ไปแปลงที่คลาส DocItem-Adapter โดยมีการคืนค่าเป็นข้อมูลเอกสารแต่ละแถวและในขั้นตอนสุดท้ายคลาส Documents-Fragment จะทำการแสดงรายการกำหนดการวันปัจจุบันออกทางหน้าจอ
+
+	\begin{sidewaysfigure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\columnwidth]
+		{Figures/3/Sequence/chat}
+		\caption{Sequence Diagram การแสดงบทสนทนา}
+		\label{Fig:Sequence-chat}
+	\end{figure}
+	\end{sidewaysfigure}
+	\newpage
+	จากภาพที่ \ref{Fig:Sequence-chat} สามารถอธิบายแผนภาพ Sequence Diagram แสดงการสนทานา ได้ดังนี้ เมื่อผู้ใช้เปิดโปรแกรมระบบจะเรียกใช้เมธอด onCreate() ที่คลาส MainActivity ระบบจะทำการสร้าง
+	Fragment ขึ้นมาโดยใช้เมธอด onCreate() ที่คลาส UserChatFragment เมื่อ UserChatFrag-ment ถูกติดตั้งบน MainActivity เมธอด getMessage() จะสืบค้นข้อมูลประวัติการสนทนาของผู้ใช้คนปัจจุบันทั้งหมดจากฐานข้อมูลบน Firebase FireStore และส่งข้อมูลที่ได้ไปแปลงที่คลาส MessagesListAdapter โดยมีการคืนค่าเป็นข้อมูลรายการประวัติการสนทนาทั้งหมดและในขั้นตอนสุดท้ายคลาส User-ChatFragment จะทำการแสดงรายการประวัติการสนทนาทั้งหมดออกทางหน้าจอ เมื่อผู้ใช้พิมพ์ข้อความและกดปุ่มส่งระบบจะเรียกให้เมธอด send() เพื่อทำการบันทึกข้อมูลไว้บน Firebase FireStore และทำการแสดงข้อมูลรายการประวัติการสนทนาทั้งหมดที่ถูกอัพเดท
+
+	\begin{sidewaysfigure}
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=0.8\columnwidth]
+		{Figures/3/Sequence/submit}
+		\caption{Sequence Diagram แสดงส่งเอกสารตรวจสอบ}
+		\label{Fig:Sequence-submit}
+	\end{figure}
+	\end{sidewaysfigure}
+	\newpage
+	จากภาพที่ \ref{Fig:Sequence-submit} สามารถอธิบายแผนภาพ Sequence Diagram แสดงส่งเอกสารตรวจสอบ ได้ดังนี้ เมื่อผู้ใช้เปิดโปรแกรมระบบจะเรียกใช้เมธอด onCreate() ที่คลาส MainActivity ระบบจะทำการสร้าง
+	Fragment ขึ้นมาโดยใช้เมธอด onCreate() ที่คลาส SubmitFragment เมื่อ Submit-Fragment ถูกติดตั้งบน MainActivity เมธอด initInstances() จะถูกเรียกเพื่อสร้างหน้าจอแสงดผลเมื่อผู้ใช้กดปุ่มถ่ายรูประบบจะเรียกใช้ไลบรารี่ ScanConstants เพื่อถ่ายภาพเอกสารและรอให้ผู้ใช้ถ่ายครบทั้งสองแผ่นจึงจะแสดงปุ่มกดส่งเอกสารเพื่อตรวจสอบ
+\newpage	 
+	
+\section{โครงสร้างฐานข้อมูลไฟร์เบส(Firebase Database Stucture)}
+Firebase Database นั้นเป็น Database แบบ NoSQL และเป็น JSON database ที่มีโครงสร้างที่เป็น Key และ Value จัดเก็บข้อมูลในลักษณะโหนด หากต้องการเรียกงานจะเรียกใช้โดย
+การท่องไปยังโหนดที่ต้องการ ส่วนประกอบสัญลักษณ์ที่ใช้ในการเขียนโครงสร้างฐานข้อมูลแบบ Firebase
+แสดงดังตารางที่ \ref{tab:DB}
+
+\begin{table}[H]
+	\centering
+	\caption{สัญลักษณ์ของโครงสร้างฐานข้อมูลแบบ Firebase}
+	\label{tab:DB}
+	\begin{tabular}{| c	| p{10cm} |}
+		\hline
+		\textbf{สัญลักษณ์} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{Figures/3/DB/dbroot}}
+		& \setstretch{1.5} {Database เป็นการเรียกชื่อแทนโหนด(Node)บนสุดที่ใช้ในการเก็บข้อมูล} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{Figures/3/DB/dbcollection}}
+		& \setstretch{1.5} {Collection เป็นการเรียกชื่อแทนของการเก็บหลาย ๆ เอกสารไว้ด้วยกัน} \\ \hline
+		\raisebox{-\totalheight}{\includegraphics[width=0.1\textwidth]{Figures/3/DB/dbdoc}}
+		& \setstretch{1.5} {Document เป็นการเรียกชื่อแทนหน่วยการเก็บของข้อมูลใน Cloud Firestore ภายในจะประกอบไปด้วย ชื่อของ Document  ชื่อของคีย์ (key) และ ค่าข้อมูล (value) โดยชื่อของ Document ห้ามซ้ำกัน ซึ่งใน Cloud Firestore สามารถระบุประเภทของข้อมูลได้ 9 ประเภทได้แก่ boolean, number, string, geo point, timestamp, array, object, reference และ null} \\ \hline
+	\end{tabular}
+\end{table}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\columnwidth]
+	{Figures/3/DB/DB1}
+	\caption{โครงสร้างฐานข้อมูลแบบ Firebase}
+	\label{Fig:DB1}
+	\end{figure}
+
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\columnwidth]
+	{Figures/3/DB/DB2}
+	\caption{โครงสร้างฐานข้อมูลแบบ Firebase(ต่อ)}
+	\label{Fig:DB2}
+\end{figure}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.55\columnwidth]
+	{Figures/3/DB/DB3}
+	\caption{โครงสร้างฐานข้อมูลแบบ Firebase(ต่อ)}
+	\label{Fig:DB3}
+\end{figure}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.7\columnwidth]
+	{Figures/3/DB/DB4}
+	\caption{โครงสร้างฐานข้อมูลแบบ Firebase(ต่อ)}
+	\label{Fig:DB4}
+\end{figure}
+
+\newpage
+จากรูที่ \ref{Fig:DB1}-\ref{Fig:DB4} สามารถอธิบายโครงสร้างของข้อมูลได้ดังนี้
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.5\columnwidth]
+{Figures/3/DB/nodePost}
+\caption{โหนดเก็บข้อมูลประกาศ}
+\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลประกาศ}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		Posts & โหนดสำหรับเก็บข้อมูลประกาศทั้งหมด \\ \hline
+		Post &  สำหรับเก็บข้อมูลแต่ละประกาศ \\ \hline
+		title & สำหรับเก็บชื่อหัวข้อประกาศ \\ \hline
+		description & สำหรับเก็บรายละเอียดประกาศ  \\ \hline
+		collection & สำหรับเก็บประเภทของประกาศได้แก่ สาธารณะและเฉพาะบุคคล \\ \hline
+		fileURL & สำหรับเก็บ url ของเอกสารแนบประกาศ \\ \hline
+		id & สำหรับเก็บรหัสของประกาศ \\ \hline
+		time & สำหรับเก็บเวลาที่ประกาศ \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\columnwidth]
+	{Figures/3/DB/nodeDoc}
+	\caption{โหนดเก็บข้อมูลเอกสารที่เกี่ยวข้อง}
+	\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลเอกสารที่เกี่ยวข้อง}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		Docs & โหนดสำหรับเก็บข้อมูลของเอกสารที่เกี่ยวข้องทั้งหมด \\ \hline
+		Doc &  สำหรับเก็บข้อมูลเอกสารแต่ละฉบับ \\ \hline
+		title & สำหรับเก็บชื่อหัวเรื่องของเอกสาร \\ \hline
+		description & สำหรับเก็บรายละเอียดของเอกสาร \\ \hline
+		fileType & สำหรับนามสกุลไฟล์เอกสาร เช่น .pdf .png เป็นต้น \\ \hline
+		fileURL & สำหรับเก็บ url ของเอกสาร\\ \hline
+		time & สำหรับเก็บเวลาที่ถูกอัพโหลดเข้าสู่ระบบโดยเจ้าหน้าที่\\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\columnwidth]
+	{Figures/3/DB/nodeChat}
+	\caption{โหนดเก็บข้อมูลประวัติการสนทนา}
+	\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลประวัติการสนทนา}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		Chats & โหนดสำหรับเก็บข้อมูลประวัติการสนทนาทั้งหมด \\ \hline
+		User\_id &  สำหรับเก็บประวัติการสนทนาของผู้ใช้แต่ละคน \\ \hline
+		Messages & สำหรับเก็บประวัติการสนทนาทั้งหมดของผู้ใช้ \\ \hline
+		Message & สำหรับเก็บข้อมูลของแต่ละข้อความ \\ \hline
+		message & สำหรับเก็บข้อความ \\ \hline
+		name & สำหรับเก็บชื่อของผู้ส่งข้อความ\\ \hline
+		photo & สำหรับเก็บ url รูปภาพของผู้ส่งข้อความ\\ \hline
+		senderId & สำหรับเก็บรหัสของผู้ส่งข้อความ\\ \hline
+		time & สำหรับเก็บเวลาที่ข้อความถูกส่ง\\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\columnwidth]
+	{Figures/3/DB/nodeEvent}
+	\caption{โหนดเก็บข้อมูลกำหนดการ}
+	\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลกำหนดการ}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		Events & โหนดสำหรับเก็บข้อมูลของกำหนดการทั้งหมด \\ \hline
+		Event & สำหรับเก็บข้อมูลของแต่ละกำหนดการ \\ \hline
+		title & สำหรับเก็บชื่อหัวข้อของกำหนดการ \\ \hline
+		description & สำหรับเก็บรายละเอียดของกำหนดการ\\ \hline
+		time & สำหรับเก็บเวลาของกำหนดการ\\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\columnwidth]
+	{Figures/3/DB/nodeReq}
+	\caption{โหนดเก็บข้อมูลการยื่นสำเนาเอกสารเพื่อตรวจสอบของนักศึกษา}
+	\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลการยื่นสำเนาเอกสารเพื่อตรวจสอบของนักศึกษา}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		RusetSubmitDocs & โหนดสำหรับเก็บข้อมูลการยื่นสำเนาเอกสารเพื่อตรวจสอบของนักศึกษาทั้งหมด \\ \hline
+		User\_id & สำหรับเก็บข้อมูลของแต่ละสำเนาเอกสารของนักศึกษาแต่ละคน \\ \hline
+		doc2 & สำหรับเก็บ url ของภาพถ่ายสำเนาเอกสารฉบับที่ 1\\ \hline
+		doc2 & สำหรับเก็บ url ของภาพถ่ายสำเนาเอกสารฉบับที่ 2\\ \hline
+		status & สำหรับเก็บผลการตรวจสอบของเจ้าหน้าที่ \\ \hline
+		time & สำหรับเก็บเวลาที่สำเนาเอกสารถูกเพิ่มเข้าสู่ระบบ \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.35\columnwidth]
+	{Figures/3/DB/nodeUser}
+	\caption{โหนดเก็บข้อมูลของนักศึกษา}
+	\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลของนักศึกษา}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		Users & โหนดสำหรับเก็บข้อมูลของนักศึกษา \\ \hline
+		User\_id & สำหรับเก็บข้อมูลของนักศึกษาแต่ละคน \\ \hline
+		depart & สำหรับเก็บภาควิชาของนักศึกษา\\ \hline
+		major & สำหรับเก็บสาขาของนักศึกษา\\ \hline
+		sid & สำหรับเก็บรหัสประจำตัวนักศึกษา \\ \hline
+		name & สำหรับเก็บชื่อของนักศึกษา \\ \hline
+		year & สำหรับเก็บชั้นปีของนักศึกษา \\ \hline
+		lastChat & สำหรับเก็บเวลาที่สนทนากับเจ้าหน้าที่ล่าสุด \\ \hline
+		photoUrl & สำหรับเก็บ url รูปภาพโปรไฟล์ (Profile) \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpage
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\columnwidth]
+	{Figures/3/DB/nodeQueue}
+	\caption{โหนดเก็บข้อมูลการจองคิวของนักศึกษา}
+	\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลการจองคิวของนักศึกษา}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		Queue & โหนดสำหรับเก็บข้อมูลการจองคิวของนักศึกษาทั้งหมด \\ \hline
+		q\_id &  สำหรับเก็บข้อมูลของการจองคิวแต่ละครั้งที่เปิดจองคิว \\ \hline
+		Date &  สำหรับเก็บวันที่สำหรับส่งเอกสาร\\ \hline
+		Time &  สำหรับเก็บรายชื่อของนักศึกษาที่ทำการจองคิวในส่งเอกสารเวลานั้น ๆ\\ \hline
+		User\_id & สำหรับเก็บรหัสของนักศึกษา \\ \hline
+		title & สำหรับเก็บชื่อหัวเรื่องกำหนดการการจองคิว \\ \hline
+		studentPerHr & สำหรับเก็บจำนวนนักศึกษาต่อชั่วโมง \\ \hline
+	\end{tabular}
+\end{table}
+
+\newpagedr
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.4\columnwidth]
+	{Figures/3/DB/nodeFaq}
+	\caption{โหนดเก็บข้อมูลคำถามที่พบบ่อย}
+	\label{Fig:DB4}
+\end{figure}
+\begin{table}[H]
+	\centering
+	\caption{อธิบายโหนดที่ใช้เก็บข้อมูลคำถามที่พบบ่อย}
+	\label{my-label1}
+	\begin{tabular}{|c|p{10cm}|}
+		\hline
+		\multicolumn{1}{|c|}{\textbf{Key}} & \multicolumn{1}{c|}{\textbf{คำอธิบาย}} \\ \hline
+		Queue & โหนดสำหรับเก็บข้อมูลคำถามที่พบบ่อยทั้งหมด \\ \hline
+		Faq\_id & สำหรับเก็บข้อมูลคำถามที่พบบ่อยแต่ละรายการ \\ \hline
+		title & สำหรับเก็บคำถาม \\ \hline
+		description & สำหรับเก็บคำตอบ \\ \hline
+	\end{tabular}
+\end{table}

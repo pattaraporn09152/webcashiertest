@@ -1,0 +1,70 @@
+\RequirePackage{tikz}
+\usetikzlibrary{arrows,matrix,positioning,shapes}
+\RequirePackage{graphicx}
+\RequirePackage{datetime}
+\RequirePackage{caption}
+\RequirePackage{forloop}
+\RequirePackage{minted}
+\RequirePackage{listings}
+
+\usepackage{float}            % for floating figures
+\usepackage{amsmath}            % for math related environment
+\usepackage{amsfonts}           % fonts for math
+\usepackage{listings}           % for psuedocode, lines of codes
+\usepackage{caption}
+\usepackage[labelformat=simple]{subcaption}
+\renewcommand\thesubfigure{(\alph{subfigure})}    % for (a) in subcaption
+\usepackage{enumitem}
+\setlist{nolistsep,topsep=0pt}
+\usepackage{wrapfig}            % for figures wrap inside text paragraph
+\usepackage{pdfpages}           % for including pdf pages
+\usepackage{verbatim}           % for block comment
+\usepackage{multicol}
+
+\usepackage{standalone}         % for proposal text inclusion
+\usepackage{pgfgantt}           % for gantt chart
+\usepackage{titlesec}
+\titlespacing{\section}{0pt}{\parskip}{-\parskip}
+
+\usepackage{array}
+\usepackage{xcolor,colortbl}
+\usepackage{pdflscape}
+\usepackage{tabularx}
+\usepackage{makecell}
+
+\usepackage{rotating}
+
+\newcommand*\rot{\rotatebox{90}}
+
+% listings format
+\lstset{
+  basicstyle=\ttfamily,
+  numbers=left,
+  numberstyle=\small,
+  breaklines=true,
+  xleftmargin=.1\linewidth,
+  frame=single,
+  columns=fullflexible,
+  captionpos=b,
+  showstringspaces=false
+}
+
+\usemintedstyle{
+  numberblanklines=true,
+  numbersep=12pt,
+  numbersep=5pt,
+  gobble=0,
+  fontsize=\footnotesize,
+  frame=lines,
+  framerule=0.4pt,
+  framesep=1mm,
+  tabsize=2,
+  obeytabs=true,
+  samepage=false, 
+  showspaces=false,
+  showtabs=false,
+  %stepnumber=2,
+  linenos,
+	breaklines
+}
+

@@ -1,0 +1,6 @@
+- model: posts.staff
+  pk: 123456
+  fields:
+    password: 00000000
+    first_name: เกิดชาติ 
+    last_name: กลุ่มไทย

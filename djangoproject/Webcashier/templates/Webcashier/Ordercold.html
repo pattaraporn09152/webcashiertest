@@ -1,0 +1,92 @@
+{% extends 'Webcashier/base.html' %}
+
+ {% block content %}
+
+      <div class="col-sm-9 p-0"
+            style=" border: 2px solid rgb(241, 176, 114) ; ">
+            <div class=" container">
+            <div class="row">
+              {% csrf_token %}
+    
+              {% for pd in order  %}
+                {% if pd.p_type  == 'COLD' %}
+                <div class="col-sm-3 p-3 mt-5">
+                  <button onclick="saveTable( '{{pd.P_name}},{{pd.p_type}},{{pd.price}}' )" type="button" class="btn btn-info" style="width: 100%; min-height: 80px;" >{{pd.P_name}}
+                  <br>{{pd.P_nameEng}}</button>
+                </div>
+                {% endif %}
+              {% endfor %}
+              <div class="row position-absolute m-0 p-0" style="bottom: 3px; width: 90%;  ">
+                <div class="col-sm-3" >
+                  <p><a href="/Incustumer">  <button type="button" class="btn btn-success " style=" width: 100%;  padding: 20px 28px;border-radius: 50%; ">หน้าแรก<br></button> </a> </p>
+                </div>
+                <div class="col-sm-3  ">
+                  <p> <a href="/Orderhot" > <button type="button" class="btn btn-success " style=" width: 100%;border-radius: 50%;   ">เมนูร้อน<br>Hot</button></a></p>
+                </div>
+                <div class="col-sm-3 ">
+                  <p> <a > <button type="button" class="btn btn-success disabled"  style=" width: 100%;border-radius: 50%;   ">เมนูเย็น<br>Cold</button></a></p>
+                </div>
+                <div class="col-sm-3">
+                  <p> <a href="/Orderblended" >  <button type="button" class="btn btn-success"  style=" width: 100%; border-radius: 50%;  ">เมนูปั่น<br>Blended</button></a></p>
+                </div>
+              </div>
+          
+            </div>
+         
+
+
+  
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script>
+    let product = ['คาปูชิโน่ เย็น', 'แบล็คคอฟฟี่ เย็น' , 'เอสเปรสโซ๋ เย็น','มอคค่า เย็น','ลาเต้ เย็น','ชาเขียวนม เย็น','ชา เย็น','นมสด เย็น','ชานม เย็น','ช็อกโกแลต เย็น','ไว ช็อก มัคคิอาโต้ เย็น','ดาร์คช็อกโกแลต เย็น','สตรอเบอร์รี่ชีสเค้ก เย็น','น้ำลิ้นจี่ เย็น','มัทฉะลาเต้ เย็น','ลาเต้ เย็น'];
+    let order = [];
+    let price = [60, 50,55,50,45,45,45,45,40,40,45,55,65,65,50];
+    function saveTable(index) {
+      let isProduct= false;
+      let totalPrice = 0;
+      order.forEach(item => {
+        if(item.name == product[index]) {
+          isProduct = true;
+          item.quantity += 1;
+          item.total = item.quantity * item.price;
+          return false
+        } else {
+          return true;
+        }
+      })
+      if(!isProduct) {
+        order.push({
+          name: product[index], 
+          quantity: 1, 
+          price: price[index],
+          total: price[index]
+        })
+      }
+      $('#tableShowList tbody:last-child').html('');
+
+      order.forEach((item, index) => {
+        totalPrice += item.price * item.quantity;
+         $('#tableShowList tbody:last-child')
+        .append(
+          '<tr> '+
+            '<th scope="row">'+(index + 1)+'</th>'+
+            '<td>'+item.name+'</td>'+
+            '<td>'+item.quantity+'</td>'+
+            '<td>'+item.price+'</td>'+
+            '<td>'+item.total+'</td>'+
+          '</tr>'
+        );
+      })
+
+      $('#showTotalPrice').text(totalPrice.toLocaleString())
+    }
+    
+  </script> -->
+
+
+
+
+</body>
+
+</html>
+{% endblock %}

@@ -1,0 +1,105 @@
+{% extends 'Webcashier/base.html' %}
+
+{% block content %}
+  
+<div class="col-sm-9 p-0">
+<div class=" container" method='POST'>
+  <div class="row">
+    {% csrf_token %}
+    
+    {% for sc in order  %}
+    {{sc.p_type}}
+      {% if sc.p_type  == 'HOT' %}
+      <div class="col-sm-3 p-3 mt-5">
+        <button onclick="saveTable( '{{sc.P_name}},{{sc.p_type}},{{sc.price}}' )" type="button" class="btn btn-info" style="width: 100%; min-height: 80px;" >{{sc.P_name}}
+        <br>{{sc.P_nameEng}}</button>
+      </div>
+      {% endif %}
+    {% endfor %}
+    <div class="row position-absolute m-0 p-0" style="bottom: 3px; width: 90%;  ">
+      <div class="col-sm-3" >
+        <p><a href="/Incustumer">  <button type="button" class="btn btn-success " style=" width: 100%;  padding: 20px 28px;border-radius: 50%; ">หน้าแรก<br></button> </a> </p>
+      </div>
+      <div class="col-sm-3  ">
+        <p> <a > <button type="button" class="btn btn-success disabled" style=" width: 100%;border-radius: 50%;   ">เมนูร้อน<br>Hot</button></a></p>
+      </div>
+      <div class="col-sm-3 ">
+        <p> <a href="/Ordercold" > <button type="button" class="btn btn-success "   style=" width: 100%;border-radius: 50%;   ">เมนูเย็น<br>Cold</button></a></p>
+      </div>
+      <div class="col-sm-3">
+        <p> <a href="/Orderblended" >  <button type="button" class="btn btn-success"  style=" width: 100%; border-radius: 50%;  ">เมนูปั่น<br>Blended</button></a></p>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+</div>
+
+
+   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script>
+    let product = ['คาปูชิโน่ ร้อน', 'แบล็คคอฟฟี่ ร้อน' , 'เอสเปรสโซ๋ ร้อน','มอคค่า ร้อน','ลาเต้ ร้อน','ชาเขียวนม ร้อน','ชา ร้อน','นมสด ร้อน','ชานม ร้อน','ช็อกโกแลต ร้อน','ไว ช็อก มัคคิอาโต้ ร้อน'];
+    let order = [];
+    let price = [60, 50,55,50,45,45,45,45,40,40,45];
+    function saveTable(index) {
+
+      let isProduct= false;
+      let totalPrice = 0;
+      order.forEach(item => {
+        if(item.name == product[index]) {
+          isProduct = true;
+          item.quantity += 1;
+          item.total = item.quantity * item.price;
+          return false
+        } else {
+          return true;
+        }
+      })
+      if(!isProduct) {
+        order.push({
+          name: product[index], 
+          quantity: 1, 
+          price: price[index],
+          total: price[index]
+        })
+      }
+      console.log(order);
+      order.forEach((item, index) => {
+        window.location.href = "base.html" + item.name;
+        console.log(item.name);
+        
+        
+      })
+
+
+      console.log('hello');
+      
+      
+     window.location.href = "base.html" + order.name;
+      $('#tableShowList tbody:last-child').html('');
+      order.forEach((item, index) => {
+        totalPrice += item.price * item.quantity;
+       
+         $('#tableShowList tbody:last-child')
+        .append(
+          '<tr> '+
+            '<th scope="row">'+(index + 1)+'</th>'+
+            '<td>'+item.name+'</td>'+
+            '<td>'+item.quantity+'</td>'+
+            '<td>'+item.price+'</td>'+
+            '<td>'+item.total+'</td>'+
+          '</tr>'
+          
+        );
+      })
+
+      $('#showTotalPrice').text(totalPrice.toLocaleString())
+    } -->
+
+    
+  </script> 
+</body>
+
+</html>
+{% endblock %}

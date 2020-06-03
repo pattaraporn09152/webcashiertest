@@ -1,0 +1,42 @@
+
+
+
+\section{ }
+	\subsection{ }
+
+\begin{itemize}
+	\item 
+\end{itemize}
+
+\begin{enumerate}
+	\item 
+\end{enumerate}
+
+		\begin{figure}[h]
+			\centering
+			\includegraphics[scale=0.5]{Figures/2/}
+			\caption{}
+			\label{Fig:rbg-image}
+		\end{figure}
+
+\begin{figure}[h]
+    \includegraphics[width=\columnwidth]{Figures/2/}
+    \caption{ }
+    \label{Fig:}
+\end{figure}
+
+\begin{figure}[h]
+	\begin{lstlisting}
+
+    \end{lstlisting}
+    \caption{ }
+    \label{Fig: }
+\end{figure}
+
+
+\begin{table}[h]
+	\caption{ตารางขั้นตอนการดำเนินการ}
+	\begin{tabular}{c}
+		\includegraphics[width=\columnwidth]{Figures/table/use-case}	\\ 
+	\end{tabular}
+\end{table}

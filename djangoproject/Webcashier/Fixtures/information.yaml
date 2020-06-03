@@ -1,0 +1,16 @@
+model: posts.informaton
+pk: 01
+fiels:
+  first_anme: ภัทราภรณ์
+  last_nme: อินทา
+  Phone: 092-2222222
+  birth_day: 19 ธ.ค. 2540
+  sex: 2
+  age: 23 
+  email: pattaraporn.in.59@ubu.ac.th
+
+  
+
+
+
+

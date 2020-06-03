@@ -1,0 +1,190 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>information</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+</head>
+<style>
+  tr {
+  
+  text-align: center;
+   
+  padding: 50px;
+
+  }
+  .block {
+    justify-content: center;
+    display: flex;
+  }
+
+  .block-images {
+    margin-top: 20px;
+    width: 200px;
+    height: 200px;
+    /* background-color: green; */
+  }
+
+  .display-info li {
+    list-style: none;
+  }
+
+  .block-info {
+    margin-top: 70px;
+  }
+
+  .block-button {
+    margin: 70px 0 0 40px
+  }
+
+  .block-table-button {
+    display: flex;
+    justify-content: center;
+  }
+
+  #example {
+    font-size: 16px;
+  }
+  .body{
+    background-color: rgba(95, 89, 93, 0.788);
+  }
+</style>
+
+<body>
+
+  <div class="container-fluid" style="min-height: 100vh;">
+    <div class="col-sm-3 px-4" style=" border: 4px solid rgb(241, 176, 114) ; min-height: 100vh">
+
+      <div class="row justify-content-center" style="background-color: #2fb4e9b7;">
+        <div>
+          <h1>ข้อมูลลูกค้า</h1>
+        </div>
+      </div>
+      <div class="row  ">
+        <div class="block w-100">
+          {% csrf_token %}
+          {% for sc in info %}
+        
+          <div class="block-images w-100 text-center">           
+            <img width="250px" height="250px"   src="{{info.ImageInfo.url}}" alt="">
+          </div>
+           
+        </div>
+
+      </div>
+      <br><br><br><br><br><br><br>
+      <!-- <div class="row"> -->
+        <table style="width:100% ; font-size: 180%;" align="center"  >
+       
+          <tr>
+            <td >ชื่อ</td>
+            <td align="left">{{sc.first_name}}</td>
+          </tr>
+          <tr>
+            <td>เบอร์โทรศัทพ์:</td>
+            <td align="left">{{sc.phone}}</td>
+          </tr>
+          <tr>
+            <td>เพศ:</td>
+            <td align="left">{{sc.Gender.name}}</td>
+          </tr>
+          <tr>
+            <td>อายุ:</td>
+            <td align="left">{{sc.age}}</td>
+          </tr>
+          <tr>
+            <td>อาชีพ:</td>
+            <td align="left">{{sc.career}}</td>
+          </tr>
+          <tr>
+            <td>E-mail:</td>
+            <td align="left">{{sc.email}}</td>
+          </tr>
+          <tr>
+            <td>เเต้มสะสม:</td>
+            <td align="left">{{sc.image}}</td>
+          </tr>
+          {% endfor %}
+          </table>
+          <div class="row position-absolute m-0 p-0" style="bottom: 3px; width: 90%;  ">
+            <div class="col-sm-6" >
+              <p><a href="/Incustumer">  <button type="button" class="btn btn-info" style=" width: 100%;  padding: 20px 28px;border-radius: 50%;font-size: 100%; ">แก้ไขข้อมูล<br></button> </a> </p>
+            </div>
+            <div class="col-sm-6" >
+              <p><a href="/Incustumer">  <button type="button" class="btn btn-success " style=" width: 100%;  padding: 20px 28px;border-radius: 50%; font-size: 100%;">กลับสู่หน้าหลัก<br></button> </a> </p>
+            </div>
+            </div>
+     
+
+    </div>
+
+    <div class="col-sm-9" style=" border: 4px solid rgb(241, 176, 114) ; min-height: 100vh">
+      <div class="row justify-content-center" style="background-color: #2fb4e9b7; ">
+        <div>
+          <h1>ข้อมูสินค้า</h1>
+        </div>
+        <br>
+      </div>
+      <br>
+        <table id="example" class="table table-striped table-bordered" style="width:100%">
+          <thead>
+            <tr>
+              <th>ลำดับ</th>
+              <th>รายการสินค้า</th>
+              <th>จำนวน(แก้ว)</th>
+              <th>ราคา(บาท)</th>              
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>คาปูชิโน่</td>
+              <td>10</td>
+              <td>600</td>              
+            </tr>
+            
+                    
+          </tbody>
+        </table>
+        <div class="row" style="bottom: 0;">
+          <div class="block-table-button">
+            <div class="button-info">
+              <div class="col-sm-3 p-3  " align="center">
+                <p><a href="/recommend"> <img
+                      src="https://scontent.fbkk11-1.fna.fbcdn.net/v/t1.15752-9/83367440_198645057927918_6681171277920600064_n.png?_nc_cat=105&_nc_eui2=AeEVwRdbbZhOu2XM3dEefDhQSyQb26ePWK99dcMY7b94aOu1QkvWtYUSLKPg70W0mO0PgePTJHWpqiYQExS1loY_PSszYRdOHXjDO_PGu0PzuQ&_nc_ohc=zE-fjWgIseEAX-_wSyS&_nc_ht=scontent.fbkk11-1.fna&oh=a8091f6a346a1cc1f45a90c190d2a4d4&oe=5EC56497"
+                      width="80%"> </a> </p>
+              </div>
+              <div class="col-sm-3 p-3  " align="center">
+                <p><a href="/Orderhot"> <img
+                      src="https://scontent.fbkk11-1.fna.fbcdn.net/v/t1.15752-9/84181117_173652207277816_7280234544727326720_n.png?_nc_cat=108&_nc_eui2=AeHSl749RlVvEO2Mbt9HE9wj31DuhIO-AoBgUQOvCqvZPg_NLfLTSXXgLPfRKIOU2rNBOBvXQivStprUpEHt5b3jnbHlwGz-r-q9IrAiZBYQwQ&_nc_ohc=GGbkFKexIU8AX84MJRk&_nc_ht=scontent.fbkk11-1.fna&oh=3512cfbeb0e6e73018d79e010d1773e5&oe=5ECF8166"
+                      width="80%"> </a> </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+      </div>
+      
+
+
+  <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#example').DataTable();
+    });
+  </script>
+</body>
+
+</html>

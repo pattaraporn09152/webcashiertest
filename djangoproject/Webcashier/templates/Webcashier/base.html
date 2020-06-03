@@ -1,0 +1,223 @@
+{% load static from staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Order</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {
+
+      min-height: 90vh;
+
+    }
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #fce5c8;
+      height: 100%;
+    }
+
+    .icon-bar {
+      width: 99%;
+      background-color: rgb(61, 60, 56);
+      overflow: auto;
+      position: fixed;
+      bottom: 0px;
+    }
+
+    .icon-bar a {
+      float: left;
+      width: 20%;
+      text-align: center;
+      padding: 12px 0;
+      transition: all 0.3s ease;
+      color: white;
+      font-size: 36px;
+    }
+
+    .icon-bar a:hover {
+      background-color: #FF8C00;
+    }
+
+    .active {
+      background-color: rgb(61, 60, 56);
+    }
+
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 100vh) {
+      .row.content {
+        height: auto;
+      }
+    }
+
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+      border: 1px solid rgb(9, 158, 71);
+    }
+
+    p {
+      text-align: center;
+    }
+  </style>
+</head>
+{% csrf_token %}
+<body onload="startTime()">
+  <div class="container-fluid">
+    <div class="row " align="center" style="height: 10vh">
+      <div class="col-3" style="background-color: rgb(235, 218, 196);  border: 4px solid rgb(241, 176, 114);height: 115%; ">
+        <br> รายการสินค้า
+        <div class="text-center" style=" text-shadow: sienna; ">
+
+        </div>
+      </div>
+      <div class="col-9  " style="background-color: rgba(235, 218, 196); border: 4px solid rgb(241, 176, 114);height: 115%; ">
+        <div class="row mx-0">
+          <h7>ชื่อพนักงาน: {{Employees.first_name}}</h7>
+        </div>
+        <div class="row mx-0">
+          <h7>วันที่:</h7>
+          <div id="today"></div>
+        </div>
+        <div class="row mx-0">
+          <h7>เวลา:</h7>
+          <div id="txt"></div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="row content ">
+      <div class="col-sm-3"style=" border: 4px solid rgb(241, 176, 114);" >
+        <div class="row h-75">
+          
+          
+          <table class="table table-striped" id="tableShowList">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">รายการ</th>
+                <th scope="col">เมนู</th>                
+                <th scope="col">ราคา</th>
+                <th scope="col">จำนวน</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+          </table>
+        </div>
+
+        <div class="row position-absolute"style="bottom: 20px; left: 50%; transform: translateX(-50%)" >
+          <div class="col-12 text-left">
+            <p class="text-left px-1 mb-5">รวมเป็นเงิน: <span id="showTotalPrice">0</span> บาท</p>
+
+          </div>
+          <div class="col-6 ">
+            <button type="button" class="btn btn-danger btn-lg">ยืนยัน</button>
+          </div>
+          <div class="col-6 justify-content-center">
+            <button type="button" class="btn btn-danger btn-lg">ยกเลิก</button>
+         </div>
+        </div>
+
+      </div>
+      {% block content %}
+      {% endblock %}
+      
+  
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script>
+    
+    let product = [];
+
+     let order = [];
+    let price = [];
+    function saveTable(index) {
+      var i; 
+      var res = index.split(",");
+      for (i = 0; i < 2; i++) {
+          // return(res[i])
+      }
+      let isProduct= false;
+      let totalPrice = 0;
+      order.forEach(item => {
+        if(item.name == res[0] || item.name2 == res[1]  ) {
+          isProduct = true;
+          item.quantity += 1;
+          item.total = item.quantity * item.price;
+          return false
+        } else {
+          return true;
+        }
+      })
+      if(!isProduct) {
+        order.push({
+          name: res[0], 
+          name2: res[1],
+          quantity: 1, 
+          price: res[2],
+          total: res[2]
+        })
+      }
+      $('#tableShowList tbody:last-child').html('');
+
+      order.forEach((item, index) => {
+        totalPrice += item.price * item.quantity;
+         $('#tableShowList tbody:last-child')
+        .append(
+          '<tr> '+
+            '<th scope="row">'+(index + 1)+'</th>'+
+            '<td>'+item.name+'</td>'+
+            '<td>'+item.name2+'</td>'+           
+            '<td>'+item.price+'</td>'+
+            '<td>'+item.quantity+'</td>'+
+          '</tr>'
+        );
+      })
+
+      $('#showTotalPrice').text(totalPrice.toLocaleString())
+    }
+
+
+  
+    function startTime() {
+      var today = new Date();
+      var h = today.getHours();
+      var m = today.getMinutes();
+      var s = today.getSeconds();
+      m = checkTime(m);
+      s = checkTime(s);
+      document.getElementById('txt').innerHTML =
+        h + ":" + m + ":" + s;
+      var t = setTimeout(startTime, 500);
+    }
+    function checkTime(i) {
+      if (i < 10) { i = "0" + i };  // add zero in front of numbers < 10
+      return i;
+    }
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();  
+        document.getElementById('today').innerHTML =
+        mm + '/' + dd + '/' + yyyy;
+
+
+   </script> 
+
+
+
+
+</body>
+
+</html>

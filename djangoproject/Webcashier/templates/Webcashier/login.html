@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+<style>
+  body {
+  margin: 0;
+  padding: 0;
+  background-color: #17a2b8;
+  height: 100vh;
+}
+#login .container #login-row #login-column #login-box {
+  margin-top: 120px;
+  max-width: 600px;
+  height: 320px;
+  border: 1px solid #9C9C9C;
+  background-color: #EAEAEA;
+  align-items: center;
+}
+#login .container #login-row #login-column #login-box #login-form {
+  padding: 20px;
+}
+#login .container #login-row #login-column #login-box #login-form #register-link {
+  margin-top: -85px;
+}
+</style>
+</head>
+<body>
+
+  <div id="login">
+    
+    <div class="container">
+        <div id="login-row" class="row justify-content-center align-items-center">
+            <div id="login-column" class="col-md-6 align-items-center" >
+                <div id="login-box" class="col-md-12 align-items-center" >
+                    <form id="login-form" class="form" action="/" method="POST">
+                      {% csrf_token %}
+                        <h3 class="text-center text-info">เข้าสู่ระบบ</h3>
+                        <div class="form-group ">
+                            <label for="username" class="text-info">รหัสพนักงาน</label><br>
+                            <input type="text" name="username" id="username" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="text-info">รหัสผ่าน</label><br>
+                            <input type="password" class="form-control" id="exampleInputPassword1" name="password" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" name="submit" class="btn btn-info btn-md" value="submit">
+                        </div>
+                        
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 
+<div id="fullscreen_bg" class="fullscreen_bg"/>
+<p class="c" href="/admin">admin
+  <br><br>
+</p>
+  <div class= content>
+   
+    <form action="/login/" method="POST">
+      {% csrf_token %}
+
+    รหัสพนักงาน
+    <br>
+    <input type="text" class="form-control" placeholder="รหัสพนักงาน" required="" autofocus="">
+    <br>
+    รหัสผ่าน
+		<input type="password" class="form-control" placeholder="รหัสผ่าน" required="">
+		<button class="btn btn-lg btn-primary btn-block"  type="submit">
+			เข้าสู่ระบบ
+		</button>
+	</form> -->
+
+</div>
+</div>
+</body>
+</html>
