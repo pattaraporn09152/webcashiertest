@@ -20,9 +20,9 @@ class RegisterForm(forms.ModelForm):
             'last_name',
             'phone',
             'gender',
-            ' age',
+            'age',
             'email',
-            'career '
+            'career',
             'imageInfo',
             'imageInfo2',
            
