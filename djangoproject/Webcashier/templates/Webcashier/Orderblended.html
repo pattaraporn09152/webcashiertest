@@ -37,53 +37,7 @@
 </div>
 </div>   
  
-  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script>
-    let product = ['คาปูชิโน่ ปั่น', 'แบล็คคอฟฟี่ ปั่น' , 'เอสเปรสโซ๋ ปั่น','มอคค่า ปั่น','ลาเต้ ปั่น','ชาเขียวนม ปั่น','นมสด ปั่น','ชานม ปั่น','ช็อกโกแลต ปั่น','ไว ช็อก มัคคิอาโต้ ปั่น','สตรอเบอร์รี่ชีสเค้ก','น้ำลินจี่ ปั่น','มัทฉะลาเต้ ปั่น','ชาเย็น ปั่น'];
-    let order = [];
-    let price = [60, 50,55,50,45,45,45,45,40,40,45,55,65,65,50];
-    function saveTable(index) {
-      let isProduct= false;
-      let totalPrice =  0;
-      order.forEach(item => {
-        if(item.name == product[index]) {
-          isProduct = true;
-          item.quantity += 1;
-          item.total = item.quantity * item.price;
-          return false
-        } else {
-          return true;
-        }
-      })
-      if(!isProduct) {
-        order.push({
-          name: product[index], 
-          quantity: 1, 
-          price: price[index],
-          total: price[index]
-        })
-      }
-      $('#tableShowList tbody:last-child').html('');
-
-      order.forEach((item, index) => {
-        totalPrice += item.price * item.quantity;
-         $('#tableShowList tbody:last-child')
-        .append(
-          '<tr> '+
-            '<th scope="row">'+(index + 1)+'</th>'+
-            '<td>'+item.name+'</td>'+
-            '<td>'+item.quantity+'</td>'+
-            '<td>'+item.price+'</td>'+
-            '<td>'+item.total+'</td>'+
-          '</tr>'
-        );
-      })
-
-      $('#showTotalPrice').text(totalPrice.toLocaleString())
-    }
-  </script> -->
-
-
+  
 
 
 </body>

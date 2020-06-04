@@ -48,7 +48,7 @@ def Incustumerpage(request):
         'user': Incustumer.objects.get(face_id= face_id)
     }
 
-    return render(request,'Webcashier/Incustumer.html',context)    
+    return render(request,'Webcashier/Incustumer.html',data)    
 
 def Editcustumerpage(request):
     return render(request,'Webcashier/Editcustumer.html',)      
@@ -88,11 +88,13 @@ def registercus(request):
             messages.error(request, "Account Register Failed!")
 
     form = RegisterForm()
+   
     context = {
         'title' : 'Register Form',
-        'form' : form
+        'form' : form,
     }
-    return render(request, 'Webcashier/register.html', context)
+
+    return render(request, 'Webcashier/register.html', context  )
     
 
 # def recommend(req):
@@ -126,22 +128,14 @@ def registercus(request):
 #     'recommends': recommend_items
 # })
 
-# def addFace(face_id):
-#     face_id = face_id
-#     facerecognition.faceDetect(face_id)
-#     facerecognition.trainFace()
-#     return redirect('/')
+def addFace(face_id):
+    face_id = face_id
+    facerecognition.faceDetect(face_id)
+    facerecognition.trainFace()
+    return redirect('/')
 
-# def loginIncus(request):
-#     face_id = facerecognition.recognizeFace()
-#     print(face_id)
-#     return redirect('/Webcashier/welcome/'+ str(face_id))
+def loginIncus(request):
+    face_id = facerecognition.recognizeFace()
+    print(face_id)
+    return redirect('/Webcashier/Icustumer/'+ str(face_id))
 
-# def welcome(request, face_id):
-#     face_id = int(face_id)
-#     print(face_id)
-#     data = {
-#         'user': Incustumer.objects.get(face_id= face_id)
-#     }
-
-#     return render(request, 'Webcashier/Incustumer.html', data)

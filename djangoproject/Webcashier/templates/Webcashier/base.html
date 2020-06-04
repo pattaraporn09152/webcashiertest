@@ -69,6 +69,7 @@
   </style>
 </head>
 {% csrf_token %}
+<form action="/Webcashier/register/" method="POST">
 <body onload="startTime()">
   <div class="container-fluid">
     <div class="row " align="center" style="height: 10vh">
@@ -122,14 +123,15 @@
 
           </div>
           <div class="col-6 ">
-            <button type="button" class="btn btn-danger btn-lg">ยืนยัน</button>
+            <button type="submit"class="btn btn-danger btn-lg">ยืนยัน</button>
           </div>
           <div class="col-6 justify-content-center">
-            <button type="button" class="btn btn-danger btn-lg">ยกเลิก</button>
+            <button type="reset"  class="btn btn-danger btn-lg">ยกเลิก</button>
          </div>
         </div>
 
       </div>
+      </form>
       {% block content %}
       {% endblock %}
       

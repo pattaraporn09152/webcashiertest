@@ -35,7 +35,6 @@ admin.site.register(User, CustomUserAdmin)
 admin.site.register(Order)
 
 admin.site.register(Incustumer, IncustummerAdmin)
-admin.site.register(Gender)
 admin.site.register(Product)
 
 admin.site.register(Employees)

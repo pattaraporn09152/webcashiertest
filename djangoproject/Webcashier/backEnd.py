@@ -1,9 +1,9 @@
 # import cv2
 # import os
-# # import sqlite3
+# import sqlite3
 # import numpy as np
 # from PIL import Image
-# # from Webcashier.settings import BASE_DIR
+# from Webcashier.settings import BASE_DIR
 
 # detector = cv2.CascadeClassifier(BASE_DIR+'/Webcashier/haarcascade_frontalface_default.xml')
 # recognizer = cv2.face.LBPHFaceRecognizer_create()
@@ -50,7 +50,7 @@
 #                 count += 1
 
 #                 # Save the captured image into the datasets folder
-#                 cv2.imwrite(BASE_DIR+'/home/dataset/User.' + str(face_id) + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w])
+#                 cv2.imwrite(BASE_DIR+'/home/dataset/Incustumer.' + str(face_id) + '.' + str(count) + ".jpg", gray[y:y+h,x:x+w])
 
 #                 cv2.imshow('Register Face', img)
 

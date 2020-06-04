@@ -8,7 +8,7 @@ urlpatterns = [
     
     path('',loginpage ),
     path('Home/', Homepage,name='Home'),
-    # path('loginIncus/',loginIncus),
+    path('loginIncus/',loginIncus),
     path('base/',Basepage,),
     path('register/',registercus,),
     path('Incustumer/',Incustumerpage,),
@@ -16,6 +16,7 @@ urlpatterns = [
     path('Orderhot/',Orderhotpage,),
     path('Orderblended/',Orderblendedpage,),
     path('Ordercold/',Ordercoldpage,),
+
     
     
     

@@ -8,21 +8,13 @@ from django.dispatch import receiver
 
 # Create your models here.
 
-
-class Gender(models.Model): #เพศ
-    Gid = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=1000)
-
-    def __str__(self):
-        return f'{self.name}'
-
 class Employees(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     password = models.CharField(max_length=300, default='')
     first_name = models.CharField(max_length=300)
     last_name = models.CharField(max_length=300)
     dob = models.DateField(default = timezone.now)
-    gen_der = models.ForeignKey(Gender,on_delete=models.CASCADE,default='')
+    gen_der = models.CharField(max_length=300)
     age       = models.CharField(max_length=20)
 
     def __str__(self):
@@ -54,7 +46,7 @@ class Incustumer(models.Model):
     first_name = models.CharField(max_length=300)
     last_name = models.CharField(max_length=300)
     phone = models.CharField(max_length=20)
-    gender = models.ForeignKey(Gender,on_delete=models.CASCADE)
+    gender= models.CharField(max_length=300)
     age       = models.CharField(max_length=20)
     email = models.EmailField(null=True, unique=True)
     career = models.CharField(max_length=300)
@@ -66,7 +58,8 @@ class Incustumer(models.Model):
 
 class Order(models.Model):   
     Oid      = models.AutoField(primary_key=True)  
-    Emp = models.ForeignKey(Employees,on_delete=models.CASCADE)
+    Emp = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(Incustumer, on_delete=models.CASCADE)
     list_Order  = models.CharField(max_length=300)
     sum_Order = models.CharField(max_length=300)   
     point = models.IntegerField()
@@ -74,7 +67,7 @@ class Order(models.Model):
     created_at = models.DateTimeField(default=datetime.now, blank=True)
     
     def __str__(self):
-        return f'{self.Oid} '
+        return f'{self.Oid}-{self.Emp} '
 
 
 class Product (models.Model):

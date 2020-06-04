@@ -72,12 +72,16 @@
       <div class="row  ">
         <div class="block w-100">
           {% csrf_token %}
-          {% for sc in info %}
-        
+        {% for sc in info %}
+          {% if sc.image %}  
           <div class="block-images w-100 text-center">           
-            <img width="250px" height="250px"   src="{{info.ImageInfo.url}}" alt="">
+            <img width="250px" height="250px"   src="{{sc.ImageInfo.url}}" alt="">
           </div>
-           
+          {% else %}
+          <div class="block-images w-100 text-center">           
+            <img width="250px" height="250px"   src="/static/images/dp.jpeg" alt="">
+          </div>
+          {% endif %}  
         </div>
 
       </div>
@@ -95,7 +99,7 @@
           </tr>
           <tr>
             <td>เพศ:</td>
-            <td align="left">{{sc.Gender.name}}</td>
+            <td align="left">{{sc.gender}}</td>
           </tr>
           <tr>
             <td>อายุ:</td>
@@ -111,7 +115,7 @@
           </tr>
           <tr>
             <td>เเต้มสะสม:</td>
-            <td align="left">{{sc.image}}</td>
+            <td align="left"></td>
           </tr>
           {% endfor %}
           </table>
