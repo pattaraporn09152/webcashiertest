@@ -11,10 +11,10 @@ from django.contrib.auth.hashers import make_password
 import joblib
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
-# from Webcashier.backEnd import FaceRecognition
+from Webcashier.backEnd import FaceRecognition
 
 
-# facerecognition = FaceRecognition()
+facerecognition = FaceRecognition()
 
 
 # Create your views here.
