@@ -72,7 +72,7 @@
       <div class="row  ">
         <div class="block w-100">
           {% csrf_token %}
-        {% for sc in info %}
+        {% for sc in user %}
           {% if sc.image %}  
           <div class="block-images w-100 text-center">           
             <img width="250px" height="250px"   src="{{sc.ImageInfo.url}}" alt="">
@@ -143,8 +143,8 @@
           <thead>
             <tr>
               <th>ลำดับ</th>
-              <th>รายการสินค้า</th>
-              <th>จำนวน(แก้ว)</th>
+              <th>วันที่สั่ง</th>
+              <th>รายการ</th>
               <th>ราคา(บาท)</th>              
             </tr>
           </thead>

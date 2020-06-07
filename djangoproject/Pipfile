@@ -12,6 +12,12 @@ joblib = "*"
 opencv-python = "*"
 pillow = "*"
 opencv-contrib-python = "*"
+django-crispy-forms = "*"
 
 [requires]
 python_version = "3.8"
+
+[scripts]
+admin = "python manage.py createsuperuser"
+migrate = "bash -c 'python manage.py makemigrations Webcashier; python manage.py migrate'"
+server = "python manage.py runserver"

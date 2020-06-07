@@ -2,6 +2,8 @@ from django import forms
 
 from .models import *
 
+# อ้างอิง - https://docs.djangoproject.com/en/3.0/topics/forms/modelforms/
+
 
 class OrderForm(forms.ModelForm):
 
@@ -27,3 +29,9 @@ class RegisterForm(forms.ModelForm):
             'imageInfo2',
            
         )
+
+class CustomerForm(forms.ModelForm):
+
+    class Meta:
+        model = Customer
+        fields = '__all__'

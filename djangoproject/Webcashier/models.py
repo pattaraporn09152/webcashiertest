@@ -41,6 +41,18 @@ def create_or_update_user_profile(sender, instance, created, **kwargs):
         Profile.objects.create(user=instance)
         instance.profile.save()        
 
+class Customer(models.Model):
+    face_id    = models.IntegerField(primary_key=True)
+    full_name  = models.CharField(max_length=300, default='')
+    phone      = models.CharField(max_length=20, default='09999999999')
+    gender     = models.CharField(max_length=300, default='ชาย')
+    age        = models.CharField(max_length=20, default=20)
+    email      = models.EmailField(null=True, unique=True, default='aaa@ubu.ac.th')
+
+    def __str__(self):
+        return f'{self.face_id} - {self.full_name}' 
+
+
 class Incustumer(models.Model):
     face_id = models.IntegerField(primary_key=True) 
     first_name = models.CharField(max_length=300)

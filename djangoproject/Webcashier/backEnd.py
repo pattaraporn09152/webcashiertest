@@ -4,9 +4,10 @@ import sqlite3
 import numpy as np
 from PIL import Image
 
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 detector = cv2.CascadeClassifier(BASE_DIR+'/Webcashier/haarcascade_frontalface_default.xml')
-face_recognizer = cv2.face.LBPHFaceRecognizer_create()
+recognizer = cv2.face.LBPHFaceRecognizer_create()
 
 
 # # Create a connection witn databse
@@ -103,7 +104,7 @@ class FaceRecognition:
 
 
     def recognizeFace(self):
-        face_recognizer.read(BASE_DIR+'/Webcashier/trainer/trainer.yml')
+        recognizer.read(BASE_DIR+'/Webcashier/trainer/trainer.yml')
         cascadePath = BASE_DIR+'/Webcashier/haarcascade_frontalface_default.xml'
         faceCascade = cv2.CascadeClassifier(cascadePath)
 
