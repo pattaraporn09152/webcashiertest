@@ -12,7 +12,7 @@ import joblib
 from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
 from Webcashier.backEnd import FaceRecognition
-
+from django.contrib import messages
 
 facerecognition = FaceRecognition()
 
@@ -41,11 +41,10 @@ def loginpage(request):
         print('เขายังไม่ได้กรอก login/password (ครั้งแรกที่เข้าหน้านี้)')
     return render(request, 'Webcashier/login.html')
 
-def Incustumerpage(request):
-    face_id = int(face_id)
+def Incustumerpage(request,face_id = 0 ):
     print(face_id)
     data = {
-        'user': Incustumer.objects.get(face_id= face_id)
+        'user': Incustumer.objects.get(pk= face_id)
     }
 
     return render(request,'Webcashier/Incustumer.html',data)    
@@ -83,7 +82,7 @@ def registercus(request):
             instance.save()
             messages.success(request, 'Successfully Registerd!')
             addFace(request.POST['face_id'])
-            return redirect('/')
+            return redirect('/Home/')
         else:
             messages.error(request, "Account Register Failed!")
 
@@ -132,10 +131,10 @@ def addFace(face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)
     facerecognition.trainFace()
-    return redirect('/')
+    return redirect('/Home/')
 
 def loginIncus(request):
     face_id = facerecognition.recognizeFace()
     print(face_id)
-    return redirect('/Webcashier/Icustumer/'+ str(face_id))
+    return redirect('/Webcashier/Incustumer/'+ str(face_id))
 

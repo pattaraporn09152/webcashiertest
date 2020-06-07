@@ -3,6 +3,7 @@ from .views import *
 from django.urls import *
 from django.conf import settings
 from django.conf.urls.static import static
+from Webcashier import views
 app_name = 'Webcashier'
 urlpatterns = [
     
@@ -16,8 +17,7 @@ urlpatterns = [
     path('Orderhot/',Orderhotpage,),
     path('Orderblended/',Orderblendedpage,),
     path('Ordercold/',Ordercoldpage,),
-
-    
+    url(r'^addFace/', views.addFace),
     
     
     
