@@ -13,6 +13,7 @@ from django.contrib.auth.decorators import login_required
 from django.db.models.signals import post_save
 from Webcashier.backEnd import FaceRecognition
 from django.contrib import messages
+#from   import FaceRecognition
 
 facerecognition = FaceRecognition()
 
@@ -42,12 +43,12 @@ def loginpage(request):
     return render(request, 'Webcashier/login.html')
 
 def Incustumerpage(request,face_id = 0 ):
-    print(face_id)
-    data = {
-        'user': Incustumer.objects.get(pk= face_id)
-    }
+    # print(face_id)
+    # data = {
+    #     'user': Incustumer.objects.get(face_id= face_id)
+    # }
 
-    return render(request,'Webcashier/Incustumer.html',data)    
+    return render(request,'Webcashier/Incustumer.html')    
 
 def Editcustumerpage(request):
     return render(request,'Webcashier/Editcustumer.html',)      
@@ -55,7 +56,7 @@ def Editcustumerpage(request):
 def Orderhotpage(request):
     order = Product.objects.all()
     context = {'order': order}
-    
+    print(order)
     return render(request,'Webcashier/Orderhot.html',context) 
 
 def Orderblendedpage(request):
@@ -72,11 +73,14 @@ def recommendpage(request):
     return render(request,'Webcashier/recommend.html',)            
 
 def Basepage(request):
-    return render(request, 'Webcashier/base.html',)
+    order = Product.objects.all()
+    context = {'order': order}
+    return render(request, 'Webcashier/base.html',context)
 
 def registercus(request):
     if request.POST:
         form = RegisterForm(request.POST or None)
+        print(form)
         if form.is_valid():
             instance = form.save(commit=False)
             instance.save()
@@ -98,27 +102,7 @@ def registercus(request):
 def customers(request):
     return render(request, 'Webcashier/customers.html', { 'customers': Customer.objects.all() })
 
-def customer_register(request):
-    '''ลงทะเบียนลูกค้า'''
-    if request.method == "POST":
-        form = CustomerForm(request.POST or None)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'ลงทะเบียนสำเร็จ')
-            #return redirect('/customer_register/')
-        else:
-            messages.error(request, 'มีข้อผิดพลาดในการลงทะเบียน')
 
-    else:
-        form = CustomerForm()
-   
-    context = {
-        'title' : 'Customer Form',
-        'form' : form,
-        'customers' : Customer.objects.all(),
-    }
-
-    return render(request, 'Webcashier/customer_register.html', context  )
 
 # def recommend(req):
 #     if req.user.is_anonymous:
@@ -155,10 +139,10 @@ def addFace(face_id):
     face_id = face_id
     facerecognition.faceDetect(face_id)
     facerecognition.trainFace()
-    return redirect('/Home/')
+    return redirect('/')
 
 def loginIncus(request):
     face_id = facerecognition.recognizeFace()
     print(face_id)
-    return redirect('/Webcashier/Incustumer/'+ str(face_id))
+    return redirect('/Webcashier/Incustumer/')
 

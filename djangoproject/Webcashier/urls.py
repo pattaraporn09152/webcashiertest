@@ -12,7 +12,6 @@ urlpatterns = [
     path('loginIncus/',loginIncus),
     path('base/',Basepage,),
     path('register/',registercus,),
-    path('customer_register/',customer_register,),
     path('customers/',customers,),
     path('Incustumer/',Incustumerpage,),
     path('Editcustumer/',Editcustumerpage,),

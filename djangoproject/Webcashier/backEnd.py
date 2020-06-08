@@ -3,10 +3,12 @@ import os
 import sqlite3
 import numpy as np
 from PIL import Image
+from djangoproject.settings import BASE_DIR
 
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-detector = cv2.CascadeClassifier(BASE_DIR+'/Webcashier/haarcascade_frontalface_default.xml')
+print("before..........")
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+detector = cv2.CascadeClassifier(BASE_DIR+'/haarcascade_frontalface_default.xml')
+print("hellooooooooo")
 recognizer = cv2.face.LBPHFaceRecognizer_create()
 
 
@@ -97,15 +99,15 @@ class FaceRecognition:
         recognizer.train(faces, np.array(ids))
 
         # Save the model into trainer/trainer.yml
-        recognizer.save(BASE_DIR+'/Webcashier/trainer/trainer.yml') # recognizer.save() worked on Mac, but not on Pi
+        recognizer.save(BASE_DIR+'/trainer/trainer.yml') # recognizer.save() worked on Mac, but not on Pi
 
         # Print the numer of faces trained and end program
         print("\n {0} faces trained. Exiting Program".format(len(np.unique(ids))))
 
 
     def recognizeFace(self):
-        recognizer.read(BASE_DIR+'/Webcashier/trainer/trainer.yml')
-        cascadePath = BASE_DIR+'/Webcashier/haarcascade_frontalface_default.xml'
+        recognizer.read(BASE_DIR+'/trainer/trainer.yml')
+        cascadePath = BASE_DIR+'/haarcascade_frontalface_default.xml'
         faceCascade = cv2.CascadeClassifier(cascadePath)
 
         font = cv2.FONT_HERSHEY_SIMPLEX

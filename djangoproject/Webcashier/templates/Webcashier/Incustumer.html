@@ -71,23 +71,23 @@
       </div>
       <div class="row  ">
         <div class="block w-100">
-          {% csrf_token %}
-        {% for sc in user %}
-          {% if sc.image %}  
+          <!-- {% csrf_token %}
+        
+          {% if sc.image %}   -->
           <div class="block-images w-100 text-center">           
             <img width="250px" height="250px"   src="{{sc.ImageInfo.url}}" alt="">
           </div>
-          {% else %}
+          <!-- {% else %} -->
           <div class="block-images w-100 text-center">           
             <img width="250px" height="250px"   src="/static/images/dp.jpeg" alt="">
           </div>
-          {% endif %}  
+          <!-- {% endif %}   -->
         </div>
 
       </div>
       <br><br><br><br><br><br><br>
       <!-- <div class="row"> -->
-        <table style="width:100% ; font-size: 180%;" align="center"  >
+        <!-- <table style="width:100% ; font-size: 180%;" align="center"  >
        
           <tr>
             <td >ชื่อ</td>
@@ -117,8 +117,8 @@
             <td>เเต้มสะสม:</td>
             <td align="left"></td>
           </tr>
-          {% endfor %}
-          </table>
+          
+          </table> -->
           <div class="row position-absolute m-0 p-0" style="bottom: 3px; width: 90%;  ">
             <div class="col-sm-6" >
               <p><a href="/Incustumer">  <button type="button" class="btn btn-info" style=" width: 100%;  padding: 20px 28px;border-radius: 50%;font-size: 100%; ">แก้ไขข้อมูล<br></button> </a> </p>
